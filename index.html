@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aprenda Francês - Guia Essencial</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-primary: #0a0a0a;
+      --bg-secondary: #141414;
+      --bg-card: #1a1a1a;
+      --bg-card-hover: #222222;
+      --bg-sidebar: #111111;
+      --bg-dropdown: #181818;
+      --text-primary: #f5f5f5;
+      --text-secondary: #a0a0a0;
+      --text-muted: #666666;
+      --accent: #00a651;
+      --accent-hover: #00c45f;
+      --accent-dim: rgba(0, 166, 81, 0.12);
+      --border: #2a2a2a;
+      --border-hover: #333333;
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: all 0.25s ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .topbar {
+      background: linear-gradient(180deg, #111111 0%, var(--bg-primary) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+    }
+    .topbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+    }
+    .topbar a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+    .topbar a:hover { color: var(--accent-hover); }
+
+    .brand-header {
+      background: linear-gradient(180deg, #111111 0%, var(--bg-primary) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .header-title-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .brand-header h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .brand-header i { color: var(--accent); font-size: 1.6rem; }
+
+    .search-wrapper { position: relative; }
+    .search-input {
+      padding: 0.6rem 2.5rem 0.6rem 1rem;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      width: 220px;
+      transition: var(--transition);
+    }
+    .search-input::placeholder { color: var(--text-muted); }
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-dim);
+    }
+    .search-btn {
+      position: absolute;
+      right: 0.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    #hamburger-btn {
+      display: none;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: var(--transition);
+    }
+    #hamburger-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    #mobile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 300;
+      backdrop-filter: blur(4px);
+    }
+    #mobile-overlay.open { display: block; }
+
+    #mobile-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 300px;
+      background: var(--bg-sidebar);
+      z-index: 400;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+      box-shadow: 4px 0 20px rgba(0,0,0,0.5);
+    }
+    #mobile-drawer.open { transform: translateX(0); }
+    .drawer-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .drawer-header h2 { font-size: 1.1rem; font-weight: 600; color: var(--text-primary); }
+    #close-drawer {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+    #close-drawer:hover { color: var(--accent); }
+    #mobile-nav-container { padding: 0.75rem; }
+
+    main { flex: 1; }
+    .main-layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem;
+      display: flex;
+      gap: 2rem;
+    }
+
+    #sidebar {
+      width: 280px;
+      flex-shrink: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      height: fit-content;
+      position: sticky;
+      top: 100px;
+      box-shadow: var(--shadow-sm);
+    }
+    .sidebar-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-header h1 { font-size: 1.15rem; font-weight: 700; color: var(--accent); }
+    #main-nav { padding: 0.75rem; }
+
+    .nav-section { margin-bottom: 0.5rem; }
+    .nav-link, .dropdown-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.7rem 0.9rem;
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: var(--transition);
+      cursor: pointer;
+      position: relative;
+    }
+    .nav-link:hover, .dropdown-btn:hover, .nav-link.active {
+      background: var(--accent-dim);
+      color: var(--accent-hover);
+    }
+    .nav-link i, .dropdown-btn i { width: 18px; text-align: center; }
+    .dropdown-btn i:last-child {
+      position: absolute;
+      right: 0.75rem;
+      font-size: 0.7rem;
+      transition: transform 0.3s ease;
+    }
+    .dropdown-btn i.rotate-90 { transform: rotate(90deg); }
+
+    .dropdown-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      padding-left: 0.5rem;
+    }
+    .dropdown-content.open { max-height: 1000px; }
+    .dropdown-content .nav-link { font-size: 0.85rem; padding: 0.55rem 0.9rem; margin-bottom: 0.15rem; }
+
+    .sidebar-resources { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+    .sidebar-resources h3 {
+      font-size: 0.8rem; font-weight: 600; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.75rem; padding: 0 0.9rem;
+    }
+    .sidebar-resources ul { list-style: none; }
+    .sidebar-resources li { margin-bottom: 0.15rem; }
+    .sidebar-resources a {
+      display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.9rem;
+      color: var(--text-muted); text-decoration: none; font-size: 0.82rem;
+      border-radius: var(--radius-sm); transition: var(--transition);
+    }
+    .sidebar-resources a:hover { color: var(--accent-hover); background: var(--accent-dim); }
+
+    #content { flex: 1; min-width: 0; }
+
+    .content-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+    .content-card:hover { border-color: var(--border-hover); box-shadow: var(--shadow); }
+    .content-card h2 {
+      font-size: 1.4rem; font-weight: 700; color: var(--text-primary);
+      margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem;
+    }
+    .content-card h2 i { color: var(--accent); font-size: 1.3rem; }
+    .content-card p { color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.95rem; }
+    .content-card p:last-child { margin-bottom: 0; }
+    .content-card strong { color: var(--text-primary); }
+    
+    .code-block {
+      font-family: 'Fira Code', 'Courier New', monospace;
+      background: #0d0d0d;
+      color: #d4d4d4;
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+      border: 1px solid var(--border);
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+    .code-block pre { margin: 0; white-space: pre-wrap; word-wrap: break-word; }
+    .keyword  { color: #569cd6; }
+    .string   { color: #ce9178; }
+    .comment  { color: #6a9955; font-style: italic; }
+    .function { color: #dcdcaa; }
+    .type     { color: #4ec9b0; }
+
+    .info-box {
+      background: var(--accent-dim); border-left: 3px solid var(--accent);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 1rem 1.25rem; margin-top: 1rem;
+    }
+    .info-box h4 { font-size: 0.85rem; font-weight: 600; color: var(--accent-hover); margin-bottom: 0.5rem; }
+    .info-box ul { color: var(--text-secondary); font-size: 0.88rem; padding-left: 1.2rem; }
+    .info-box li { margin-bottom: 0.25rem; }
+    .info-box i { color: var(--accent); margin-right: 0.5rem; }
+    
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem; }
+    .grid-item {
+      background: var(--bg-secondary); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 1rem; font-size: 0.9rem; color: var(--text-secondary);
+    }
+    .grid-item strong { color: var(--accent); }
+
+    footer {
+      background: var(--bg-secondary); border-top: 1px solid var(--border);
+      padding: 2.5rem 1.25rem; margin-top: 2rem; text-align: center; border-radius: var(--radius);
+    }
+    .footer-divider {
+      width: 60px; height: 2px; background: var(--accent); margin: 0 auto 1rem;
+      border-radius: 1px; opacity: 0.6;
+    }
+    footer p { color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 0.5rem; }
+    footer .credits { font-weight: 600; color: var(--text-primary); }
+
+    @media (max-width: 900px) {
+      #sidebar { display: none; }
+      #hamburger-btn { display: block; }
+      .main-layout { padding: 1.25rem; gap: 0; }
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="brand-header">
+    <div class="header-container">
+      <div class="header-title-wrapper">
+        <i class="fas fa-language"></i>
+        <h1>Francês Essencial</h1>
+      </div>
+      
+      <div class="search-wrapper">
+        <input type="text" class="search-input" placeholder="Pesquisar">
+        <button class="search-btn"><i class="fas fa-search"></i></button>
+      </div>
+
+      <button id="hamburger-btn">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <div id="mobile-overlay"></div>
+  
+  <div id="mobile-drawer">
+    <div class="drawer-header">
+      <h2>Menu de Lições</h2>
+      <button id="close-drawer"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="mobile-nav-container">
+    </div>
+  </div>
+
+  <main>
+    <div class="main-layout">
+      
+      <aside id="sidebar">
+        <div class="sidebar-header">
+          <h1>Tópicos</h1>
+        </div>
+        
+        <nav id="main-nav">
+          <div class="nav-section">
+            <a href="#" class="nav-link active">
+              <i class="fas fa-home"></i> Introdução
+            </a>
+          </div>
+
+          <div class="nav-section">
+            <div class="dropdown-btn">
+              <i class="fas fa-comment-dots"></i> Vocabulário
+              <i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="dropdown-content">
+              <a href="#" class="nav-link">Saudações</a>
+              <a href="#" class="nav-link">Números</a>
+              <a href="#" class="nav-link">Cores e Dias</a>
+            </div>
+          </div>
+
+          <div class="nav-section">
+            <div class="dropdown-btn">
+              <i class="fas fa-book-open"></i> Gramática
+              <i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="dropdown-content">
+              <a href="#" class="nav-link">Os Artigos</a>
+              <a href="#" class="nav-link">Verbos Regulares</a>
+              <a href="#" class="nav-link">Verbos Irregulares</a>
+            </div>
+          </div>
+
+          <div class="sidebar-resources">
+            <h3>Materiais Extras</h3>
+            <ul>
+              <li><a href="#"><i class="fas fa-file-pdf"></i> Tabela de Verbos</a></li>
+              <li><a href="#"><i class="fas fa-headphones"></i> Áudios de Pronúncia</a></li>
+            </ul>
+          </div>
+        </nav>
+      </aside>
+
+      <section id="content">
+        
+        <div class="content-card">
+          <h2><i class="fas fa-map"></i> Bem-vindo ao Mundo do Francês</h2>
+          <p>Aprender francês pode abrir as portas para a cultura, história, gastronomia e negócios em mais de 29 países onde o idioma é falado. Neste guia rápido, vamos passar pelos pilares essenciais da língua francesa.</p>
+          
+          <div class="info-box">
+            <h4><i class="fas fa-lightbulb"></i> Fato Curioso</h4>
+            <ul>
+              <li>O francês é conhecido como a língua do amor, mas também é o idioma oficial de agências internacionais como a ONU, a UNESCO e a Cruz Vermelha.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="content-card">
+          <h2><i class="fas fa-comments"></i> Saudações Essenciais</h2>
+          <p>A primeira coisa que você precisa saber é como cumprimentar as pessoas. Os franceses valorizam muito a educação (a <strong>politesse</strong>).</p>
+          
+          <div class="grid-2">
+            <div class="grid-item">
+              <strong>Bonjour</strong><br>
+              Bom dia / Boa tarde. (Usado até o final da tarde)
+            </div>
+            <div class="grid-item">
+              <strong>Bonsoir</strong><br>
+              Boa noite. (Usado ao chegar a um lugar à noite)
+            </div>
+            <div class="grid-item">
+              <strong>S'il vous plaît</strong><br>
+              Por favor. (Formal ou no plural)
+            </div>
+            <div class="grid-item">
+              <strong>Merci beaucoup</strong><br>
+              Muito obrigado(a).
+            </div>
+          </div>
+        </div>
+
+        <div class="content-card">
+          <h2><i class="fas fa-pen-nib"></i> Os Verbos: Être e Avoir</h2>
+          <p>Os verbos <strong>Être</strong> (Ser/Estar) e <strong>Avoir</strong> (Ter) são os dois verbos mais importantes do idioma. Eles são usados o tempo todo, inclusive como verbos auxiliares.</p>
+
+          <div class="code-block">
+<pre>
+<span class="comment">// Conjugação do verbo Être (Ser/Estar) no Presente</span>
+<span class="keyword">Je</span> <span class="function">suis</span>      <span class="string">(Eu sou / estou)</span>
+<span class="keyword">Tu</span> <span class="function">es</span>        <span class="string">(Tu és / estás)</span>
+<span class="keyword">Il/Elle</span> <span class="function">est</span>  <span class="string">(Ele/Ela é / está)</span>
+<span class="keyword">Nous</span> <span class="function">sommes</span>  <span class="string">(Nós somos / estamos)</span>
+<span class="keyword">Vous</span> <span class="function">êtes</span>    <span class="string">(Vocês são / o senhor é)</span>
+<span class="keyword">Ils/Elles</span> <span class="function">sont</span> <span class="string">(Eles/Elas são / estão)</span>
+</pre>
+          </div>
+          <p>Lembre-se: Em francês, os pronomes (Je, Tu, Il...) são obrigatórios na frase, diferentemente do português onde podemos ocultá-los.</p>
+        </div>
+
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-divider"></div>
+    <p>Criado para facilitar o estudo para a prova da Turma B.</p>
+    <p>Desenvolvido com carinho por David Carlos Miranda Delgado.</p>
+    <p>Versão 1.0</p>
+  </footer>
+
+  <script>
+    const dropdownBtns = document.querySelectorAll('.dropdown-btn');
+    dropdownBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const content = btn.nextElementSibling;
+        const icon = btn.querySelector('.fa-chevron-right');
+        
+        content.classList.toggle('open');
+        icon.classList.toggle('rotate-90');
+      });
+    });
+
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const mobileDrawer = document.getElementById('mobile-drawer');
+    const mobileOverlay = document.getElementById('mobile-overlay');
+    const closeDrawerBtn = document.getElementById('close-drawer');
+    const mobileNavContainer = document.getElementById('mobile-nav-container');
+    const mainNav = document.getElementById('main-nav');
+
+    mobileNavContainer.appendChild(mainNav.cloneNode(true));
+
+    const mobileDropdownBtns = mobileNavContainer.querySelectorAll('.dropdown-btn');
+    mobileDropdownBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const content = btn.nextElementSibling;
+        const icon = btn.querySelector('.fa-chevron-right');
+        content.classList.toggle('open');
+        icon.classList.toggle('rotate-90');
+      });
+    });
+
+    function toggleDrawer() {
+      mobileDrawer.classList.toggle('open');
+      mobileOverlay.classList.toggle('open');
+    }
+
+    hamburgerBtn.addEventListener('click', toggleDrawer);
+    closeDrawerBtn.addEventListener('click', toggleDrawer);
+    mobileOverlay.addEventListener('click', toggleDrawer);
+  </script>
+</body>
+</html>
