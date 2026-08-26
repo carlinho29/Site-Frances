@@ -471,11 +471,10 @@
 
   <footer>
     <div class="footer-divider"></div>
-    <p>Criado para facilitar o estudo para a prova da Turma B.</p>
+    <p>Criado para facilitar o estudo para a prova da Turma A e B.</p>
     <p>Desenvolvido com carinho por David Carlos Miranda Delgado.</p>
     <p>Versão 1.0</p>
   </footer>
-
   <script>
     const dropdownBtns = document.querySelectorAll('.dropdown-btn');
     dropdownBtns.forEach(btn => {
@@ -487,7 +486,6 @@
         icon.classList.toggle('rotate-90');
       });
     });
-
     const hamburgerBtn = document.getElementById('hamburger-btn');
     const mobileDrawer = document.getElementById('mobile-drawer');
     const mobileOverlay = document.getElementById('mobile-overlay');
@@ -506,15 +504,23 @@
         icon.classList.toggle('rotate-90');
       });
     });
-
     function toggleDrawer() {
       mobileDrawer.classList.toggle('open');
       mobileOverlay.classList.toggle('open');
     }
-
     hamburgerBtn.addEventListener('click', toggleDrawer);
     closeDrawerBtn.addEventListener('click', toggleDrawer);
     mobileOverlay.addEventListener('click', toggleDrawer);
   </script>
+  <div vw class="enabled">
+  <div vw-access-button class="active"></div>
+  <div vw-plugin-wrapper>
+    <div class="vw-plugin-top-wrapper"></div>
+  </div>
+</div>
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>
+  new window.VLibras.Widget('https://vlibras.gov.br/app');
+</script>
 </body>
 </html>
