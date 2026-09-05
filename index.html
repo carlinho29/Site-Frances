@@ -14,7 +14,7 @@
       --bg-card: #1a1a1a;
       --bg-card-hover: #222222;
       --bg-sidebar: #111111;
-      --text-primary: #f5f55;
+      --text-primary: #f5f5f5;
       --text-secondary: #a0a0a0;
       --text-muted: #666666;
       --accent: #00a651;
@@ -44,7 +44,7 @@
       line-height: 1.6;
     }
 
-   brand-header {
+    .brand-header {
       background: linear-gradient(180deg, #111111 0%, var(--bg-primary) 100%);
       border-bottom: 1px solid var(--border);
       padding: 1rem;
@@ -119,7 +119,7 @@
     #progress-bar {
       position: fixed; top: 0; left: 0; height: 3px;
       background: linear-gradient(90deg, var(--accent), var(--gold));
-      width: 0%; z-index: 500; transition: width 0.1s;
+      width: 0%; z-index: 500; transition: width 0.3s ease;
     }
 
     #mobile-overlay {
@@ -132,6 +132,7 @@
       background: var(--bg-sidebar); z-index: 400;
       transform: translateX(-100%); transition: transform 0.3s ease;
       overflow-y: auto; border-right: 1px solid var(--border);
+      padding-bottom: 2rem;
     }
     #mobile-drawer.open { transform: translateX(0); }
     .drawer-header {
@@ -153,7 +154,7 @@
     }
     .sidebar-header { padding: 1.25rem; border-bottom: 1px solid var(--border); }
     .sidebar-header h1 { font-size: 1.15rem; font-weight: 700; color: var(--accent); }
-    #main-nav { padding: 0.75rem; }
+    #main-nav, #mobile-nav-container { padding: 0.75rem; }
 
     .nav-link, .dropdown-btn {
       display: flex; align-items: center; gap: 0.6rem;
@@ -192,12 +193,24 @@
 
     #content { flex: 1; min-width: 0; }
 
+    .section-tab {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    .section-tab.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .content-card {
       background: var(--bg-card); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 1.75rem;
       margin-bottom: 1.5rem; box-shadow: var(--shadow-sm);
       transition: var(--transition);
-      scroll-margin-top: 90px;
     }
     .content-card:hover { border-color: var(--border-hover); }
     .content-card h2 {
@@ -250,9 +263,11 @@
     .grid-item strong { color: var(--accent); }
     .grid-item .phon { color: var(--blue); font-size: 0.8rem; display: block; margin-top: 0.25rem; }
 
+    .table-container { width: 100%; overflow-x: auto; margin-top: 1rem; }
     .styled-table {
-      width: 100%; border-collapse: collapse; margin-top: 1rem;
+      width: 100%; border-collapse: collapse;
       font-size: 0.9rem; border-radius: var(--radius-sm); overflow: hidden;
+      min-width: 400px;
     }
     .styled-table th {
       background: var(--accent-dim); color: var(--accent-hover);
@@ -284,14 +299,14 @@
     .flashcard-area { display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-top: 1rem; }
     .flashcard {
       width: 100%; max-width: 420px; height: 180px;
-      perspective: 1000px; cursor: pointer;
+      perspective: 1000px; cursor: pointer; position: relative;
     }
     .flashcard-inner {
       width: 100%; height: 100%; position: relative;
       transform-style: preserve-3d; transition: transform 0.6s;
     }
     .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
-    .flashcard {
+    .flashcard-face {
       position: absolute; inset: 0; backface-visibility: hidden;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       border-radius: var(--radius); border: 1px solid var(--border);
@@ -299,9 +314,9 @@
     }
     .flashcard-front { background: var(--bg-secondary); }
     .flashcard-back { background: var(--accent-dim); transform: rotateY(180deg); }
-    .flashcard-face .word { font-size: 1.6rem; font-weight: 700; color: var(--text-primary); }
+    .flashcard-face .word { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); }
     .flashcard-face .hint { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; }
-    .flashcard-controls { display: flex; gap: 0.75rem; }
+    .flashcard-controls { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; justify-content: center; }
 
     .btn {
       background: var(--accent); color: #fff; border: none;
@@ -336,7 +351,6 @@
     }
     .footer-divider { width: 60px; height: 2px; background: var(--accent); margin: 0 auto 1rem; border-radius: 1px; }
     footer p { color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 0.5rem; }
-    footer .credits { font-weight: 600; color: var(--text-primary); }
 
     #toast {
       position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
@@ -356,6 +370,8 @@
     }
     @media (max-width: 520px) {
       .search-wrapper { display: none; }
+      .hero h2 { font-size: 1.5rem; }
+      .hero-stats { gap: 1rem; }
     }
   </style>
 </head>
@@ -373,11 +389,11 @@
       <div class="header-actions">
         <div class="search-wrapper">
           <input type="text" class="search-input" id="search-input" placeholder="Pesquisar lições..." autocomplete="off">
-          <button class="search-btn" id="search-btn"><i class="fas fa-search"></i></button>
+          <button class="search-btn" id="search-btn" aria-label="Pesquisar"><i class="fas fa-search"></i></button>
           <div id="search-results"></div>
         </div>
-        <button class="icon-btn" id="theme-toggle" title="Alternar tema"><i class="fas fa-sun"></i></button>
-        <button class="icon-btn" id="hamburger-btn"><i class="fas fa-bars"></i></button>
+        <button class="icon-btn" id="theme-toggle" title="Alternar tema" aria-label="Tema"><i class="fas fa-sun"></i></button>
+        <button class="icon-btn" id="hamburger-btn" aria-label="Menu"><i class="fas fa-bars"></i></button>
       </div>
     </div>
   </header>
@@ -387,7 +403,7 @@
   <div id="mobile-drawer">
     <div class="drawer-header">
       <h2>Menu de Lições</h2>
-      <button id="close-drawer"><i class="fas fa-times"></i></button>
+      <button id="close-drawer" aria-label="Fechar Menu"><i class="fas fa-times"></i></button>
     </div>
     <div id="mobile-nav-container"></div>
   </div>
@@ -436,135 +452,152 @@
 
       <section id="content">
 
-        <div class="hero" id="intro">
-          <h2>Apprenez le <span>Français</span> 🇫🇷</h2>
-          <p>Um guia completo e interativo para dominar os fundamentos da língua francesa — com vocabulário, gramática, flashcards e quiz.</p>
-          <div class="hero-stats">
-            <div class="hero-stat"><b>29+</b><span>Países francófonos</span></div>
-            <div class="hero-stat"><b>300M</b><span>Falantes no mundo</span></div>
-            <div class="hero-stat"><b>8</b><span>Lições completas</span></div>
-            <div class="hero-stat"><b>100%</b><span>Gratuito</span></div>
+        <div class="section-tab active" id="sec-intro">
+          <div class="hero">
+            <h2>Apprenez le <span>Français</span> 🇫🇷</h2>
+            <p>Um guia completo e interativo para dominar os fundamentos da língua francesa — com vocabulário, gramática, flashcards e quiz.</p>
+            <div class="hero-stats">
+              <div class="hero-stat"><b>29+</b><span>Países francófonos</span></div>
+              <div class="hero-stat"><b>300M</b><span>Falantes no mundo</span></div>
+              <div class="hero-stat"><b>8</b><span>Lições completas</span></div>
+              <div class="hero-stat"><b>100%</b><span>Gratuito</span></div>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <h2><i class="fas fa-map"></i> Bem-vindo ao Mundo do Francês</h2>
+            <p>Aprender francês abre portas para a cultura, história, gastronomia e negócios em mais de 29 países. Neste guia, vamos passar pelos pilares essenciais do idioma, do vocabulário básico até a conjugação verbal.</p>
+            <div class="info-box">
+              <h4><i class="fas fa-lightbulb"></i> Fato Curioso</h4>
+              <ul>
+                <li>O francês é idioma oficial da ONU, UNESCO e Cruz Vermelha.</li>
+                <li>Cerca de 30% do vocabulário inglês tem origem francesa.</li>
+                <li>É a 5ª língua mais falada do mundo e a 2ª mais aprendida como estrangeira.</li>
+              </ul>
+            </div>
           </div>
         </div>
 
-        <div class="content-card">
-          <h2><i class="fas fa-map"></i> Bem-vindo ao Mundo do Francês</h2>
-          <p>Aprender francês abre portas para a cultura, história, gastronomia e negócios em mais de 29 países. Neste guia, vamos passar pelos pilares essenciais do idioma, do vocabulário básico até a conjugação verbal.</p>
-          <div class="info-box">
-            <h4><i class="fas fa-lightbulb"></i> Fato Curioso</h4>
-            <ul>
-              <li>O francês é idioma oficial da ONU, UNESCO e Cruz Vermelha.</li>
-              <li>Cerca de 30% do vocabulário inglês tem origem francesa.</li>
-              <li>É a 5ª língua mais falada do mundo e a 2ª mais aprendida como estrangeira.</li>
-            </ul>
+        <div class="section-tab" id="sec-saudacoes">
+          <div class="content-card">
+            <h2><i class="fas fa-comments"></i> Saudações Essenciais</h2>
+            <p>Os franceses valorizam muito a educação (a <strong>politesse</strong>). Sempre comece com uma saudação antes de qualquer pergunta!</p>
+            <div class="grid-2">
+              <div class="grid-item"><strong>Bonjour</strong><span class="phon">/bɔ̃ʒuʁ/ — "bon-zhúr"</span>Bom dia / Boa tarde (até o fim da tarde).</div>
+              <div class="grid-item"><strong>Bonsoir</strong><span class="phon">/bɔ̃swaʁ/ — "bon-suár"</span>Boa noite (ao chegar).</div>
+              <div class="grid-item"><strong>Bonne nuit</strong><span class="phon">/bɔn nɥi/ — "bon-nuí"</span>Boa noite (ao dormir).</div>
+              <div class="grid-item"><strong>S'il vous plaît</strong><span class="phon">/sil vu plɛ/ — "sil-vu-plé"</span>Por favor (formal).</div>
+              <div class="grid-item"><strong>Merci beaucoup</strong><span class="phon">/mɛʁsi boku/ — "mer-sí bo-cú"</span>Muito obrigado(a).</div>
+              <div class="grid-item"><strong>Au revoir</strong><span class="phon">/o ʁəvwaʁ/ — "o-re-vuár"</span>Até logo / Adeus.</div>
+              <div class="grid-item"><strong>Comment ça va ?</strong><span class="phon">— "comã sa vá"</span>Como vai você?</div>
+              <div class="grid-item"><strong>Enchanté(e)</strong><span class="phon">— "an-chã-té"</span>Prazer em conhecê-lo(a).</div>
+            </div>
+            <div class="warn-box">
+              <h4><i class="fas fa-exclamation-triangle"></i> Atenção à pronúncia</h4>
+              <p>O "R" francês é gutural (vem da garganta), diferente do "R" português. Pratique com a palavra <strong>Paris</strong> — soa mais como "pa-RHI".</p>
+            </div>
           </div>
         </div>
 
-        <div class="content-card" id="saudacoes">
-          <h2><i class="fas fa-comments"></i> Saudações Essenciais</h2>
-          <p>Os franceses valorizam muito a educação (a <strong>politesse</strong>). Sempre comece com uma saudação antes de qualquer pergunta!</p>
-          <div class="grid-2">
-            <div class="grid-item"><strong>Bonjour</strong><span class="phon">/bɔ̃ʒuʁ/ — "bon-zhúr"</span>Bom dia / Boa tarde (até o fim da tarde).</div>
-            <div class="grid-item"><strong>Bonsoir</strong><span class="phon">/bɔ̃swaʁ/ — "bon-suár"</span>Boa noite (ao chegar).</div>
-            <div class="grid-item"><strong>Bonne nuit</strong><span class="phon">/bɔn nɥi/ — "bon-nuí"</span>Boa noite (ao dormir).</div>
-            <div class="grid-item"><strong>S'il vous plaît</strong><span class="phon">/sil vu plɛ/ — "sil-vu-plé"</span>Por favor (formal).</div>
-            <div class="grid-item"><strong>Merci beaucoup</strong><span class="phon">/mɛʁsi boku/ — "mer-sí bo-cú"</span>Muito obrigado(a).</div>
-            <div class="grid-item"><strong>Au revoir</strong><span class="phon">/o ʁəvwaʁ/ — "o-re-vuár"</span>Até logo / Adeus.</div>
-            <div class="grid-item"><strong>Comment ça va ?</strong><span class="phon">— "comã sa vá"</span>Como vai você?</div>
-            <div class="grid-item"><strong>Enchanté(e)</strong><span class="phon">— "an-chã-té"</span>Prazer em conhecê-lo(a).</div>
-          </div>
-          <div class="warn-box">
-            <h4><i class="fas fa-exclamation-triangle"></i> Atenção à pronúncia</h4>
-            <p>O "R" francês é gutural (vem da garganta), diferente do "R" português. Pratique com a palavra <strong>Paris</strong> — soa mais como "pa-RHI".</p>
-          </div>
-        </div>
-
-        <div class="content-card" id="numeros">
-          <h2><i class="fas fa-sort-numeric-up"></i> Números de 0 a 20</h2>
-          <p>Os números são fundamentais para compras, horários e telefones. Note que a partir de 70 o sistema francês fica curioso!</p>
-          <table class="styled-table">
-            <thead><tr><th>Número</th><th>Francês</th><th>Pronúncia</th></tr></thead>
-            <tbody>
-              <tr><td>0</td><td>zéro</td><td>ze-rô</td></tr>
-              <tr><td>1</td><td>un</td><td>ã</td></tr>
-              <tr><td>2</td><td>deux</td><td>deu</td></tr>
-              <tr><td>3</td><td>trois</td><td>truá</td></tr>
-              <tr><td>4</td><td>quatre</td><td>katr</td></tr>
-              <tr><td>5</td><td>cinq</td><td>sãk</td></tr>
-              <tr><td>6</td><td>six</td><td>siss</td></tr>
-              <tr><td>7</td><td>sept</td><td>sét</td></tr>
-              <tr><td>8</td><td>huit</td><td>üit</td></tr>
-              <tr><td>9</td><td>neuf</td><td>neuf</td></tr>
-              <tr><td>10</td><td>dix</td><td>diss</td></tr>
-              <tr><td>11–16</td><td>onze, douze, treize, quatorze, quinze, seize</td><td>ônz, duz, trez, ka-torz, kãz, sez</td></tr>
-              <tr><td>17</td><td>dix-sept</td><td>di-sét (10+7)</td></tr>
-              <tr><td>20</td><td>vingt</td><td>vã</td></tr>
-            </tbody>
-          </table>
-          <div class="info-box">
-            <h4><i class="fas fa-lightbulb"></i> Curiosidade matemática</h4>
-            <ul>
-              <li><strong>70</strong> = soixante-dix (60 + 10) &nbsp;•&nbsp; <strong>80</strong> = quatre-vingts (4 × 20) &nbsp;•&nbsp; <strong>90</strong> = quatre-vingt-dix (4 × 20 + 10)</li>
-            </ul>
+        <div class="section-tab" id="sec-numeros">
+          <div class="content-card">
+            <h2><i class="fas fa-sort-numeric-up"></i> Números de 0 a 20</h2>
+            <p>Os números são fundamentais para compras, horários e telefones. Note que a partir de 70 o sistema francês fica curioso!</p>
+            <div class="table-container">
+              <table class="styled-table">
+                <thead><tr><th>Número</th><th>Francês</th><th>Pronúncia</th></tr></thead>
+                <tbody>
+                  <tr><td>0</td><td>zéro</td><td>ze-rô</td></tr>
+                  <tr><td>1</td><td>un</td><td>ã</td></tr>
+                  <tr><td>2</td><td>deux</td><td>deu</td></tr>
+                  <tr><td>3</td><td>trois</td><td>truá</td></tr>
+                  <tr><td>4</td><td>quatre</td><td>katr</td></tr>
+                  <tr><td>5</td><td>cinq</td><td>sãk</td></tr>
+                  <tr><td>6</td><td>six</td><td>siss</td></tr>
+                  <tr><td>7</td><td>sept</td><td>sét</td></tr>
+                  <tr><td>8</td><td>huit</td><td>üit</td></tr>
+                  <tr><td>9</td><td>neuf</td><td>neuf</td></tr>
+                  <tr><td>10</td><td>dix</td><td>diss</td></tr>
+                  <tr><td>11 a 16</td><td>onze, douze, treize, quatorze, quinze, seize</td><td>ônz, duz, trez, ka-torz, kãz, sez</td></tr>
+                  <tr><td>17</td><td>dix-sept</td><td>di-sét (10+7)</td></tr>
+                  <tr><td>20</td><td>vingt</td><td>vã</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="info-box">
+              <h4><i class="fas fa-lightbulb"></i> Curiosidade matemática</h4>
+              <ul>
+                <li><strong>70</strong> = soixante-dix (60 + 10) &nbsp;•&nbsp; <strong>80</strong> = quatre-vingts (4 × 20) &nbsp;•&nbsp; <strong>90</strong> = quatre-vingt-dix (4 × 20 + 10)</li>
+              </ul>
+            </div>
           </div>
         </div>
 
-        <div class="content-card" id="cores">
-          <h2><i class="fas fa-palette"></i> Cores e Dias da Semana</h2>
-          <div class="grid-3">
-            <div class="grid-item"><strong>Rouge</strong> — Vermelho</div>
-            <div class="grid-item"><strong>Bleu</strong> — Azul</div>
-            <div class="grid-item"><strong>Vert</strong> — Verde</div>
-            <div class="grid-item"><strong>Jaune</strong> — Amarelo</div>
-            <div class="grid-item"><strong>Noir</strong> — Preto</div>
-            <div class="grid-item"><strong>Blanc</strong> — Branco</div>
-          </div>
-          <table class="styled-table" style="margin-top:1.5rem;">
-            <thead><tr><th>Dia</th><th>Francês</th><th>Dia</th><th>Francês</th></tr></thead>
-            <tbody>
-              <tr><td>Segunda</td><td>lundi</td><td>Quinta</td><td>jeudi</td></tr>
-              <tr><td>Terça</td><td>mardi</td><td>Sexta</td><td>vendredi</td></tr>
-              <tr<td>Quarta</td><td>mercredi</td><td>Sábado</td><td>samedi</td></tr>
-              <tr><td colspan="2"></td><td>Domingo</td><td>dimanche</td></tr>
-            </tbody>
-          </table>
-          <div class="info-box">
-            <h4><i class="fas fa-lightbulb"></i> Dica</h4>
-            <ul><li>Os dias da semana não levam maiúscula em francês: <strong>lundi</strong>, não <strong>Lundi</strong>.</li></ul>
+        <div class="section-tab" id="sec-cores">
+          <div class="content-card">
+            <h2><i class="fas fa-palette"></i> Cores e Dias da Semana</h2>
+            <div class="grid-3">
+              <div class="grid-item"><strong>Rouge</strong> — Vermelho</div>
+              <div class="grid-item"><strong>Bleu</strong> — Azul</div>
+              <div class="grid-item"><strong>Vert</strong> — Verde</div>
+              <div class="grid-item"><strong>Jaune</strong> — Amarelo</div>
+              <div class="grid-item"><strong>Noir</strong> — Preto</div>
+              <div class="grid-item"><strong>Blanc</strong> — Branco</div>
+            </div>
+            <div class="table-container">
+              <table class="styled-table">
+                <thead><tr><th>Dia</th><th>Francês</th><th>Dia</th><th>Francês</th></tr></thead>
+                <tbody>
+                  <tr><td>Segunda</td><td>lundi</td><td>Quinta</td><td>jeudi</td></tr>
+                  <tr><td>Terça</td><td>mardi</td><td>Sexta</td><td>vendredi</td></tr>
+                  <tr><td>Quarta</td><td>mercredi</td><td>Sábado</td><td>samedi</td></tr>
+                  <tr><td colspan="2"></td><td>Domingo</td><td>dimanche</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="info-box">
+              <h4><i class="fas fa-lightbulb"></i> Dica</h4>
+              <ul><li>Os dias da semana não levam maiúscula em francês: <strong>lundi</strong>, não <strong>Lundi</strong>.</li></ul>
+            </div>
           </div>
         </div>
 
-        <div class="content-card" id="artigos">
-          <h2><i class="fas fa-book"></i> Os Artigos</h2>
-          <p>Diferente do português, o francês tem artigos <strong>contractions</strong> obrigatórias com preposições:</p>
-          <table class="styled-table">
-            <thead><tr><th>Tipo</th><th>Masculino</th><th>Feminino</th><th>Plural</th></tr></thead>
-            <tbody>
-              <tr><td>Definido (o/a/os/as)</td><td>le</td><td>la</td><td>les</td></tr>
-              <tr><td>Indefinido (um/uma)</td><td>un</td><td>une</td><td>des</td></tr>
-              <tr><td>Com "de" (do/da)</td><td>du (de+le)</td><td>de la</td><td>des</td></tr>
-                            <tr><td>Com "à" (ao/à)</td><td>au (à+le)</td><td>à la</td><td>aux</td></tr>
-            </tbody>
-          </table>
-          <div class="code-block">
+        <div class="section-tab" id="sec-artigos">
+          <div class="content-card">
+            <h2><i class="fas fa-book"></i> Os Artigos</h2>
+            <p>Diferente do português, o francês tem contrações obrigatórias com preposições:</p>
+            <div class="table-container">
+              <table class="styled-table">
+                <thead><tr><th>Tipo</th><th>Masculino</th><th>Feminino</th><th>Plural</th></tr></thead>
+                <tbody>
+                  <tr><td>Definido (o/a/os/as)</td><td>le</td><td>la</td><td>les</td></tr>
+                  <tr><td>Indefinido (um/uma)</td><td>un</td><td>une</td><td>des</td></tr>
+                  <tr><td>Com "de" (do/da)</td><td>du (de+le)</td><td>de la</td><td>des</td></tr>
+                  <tr><td>Com "à" (ao/à)</td><td>au (à+le)</td><td>à la</td><td>aux</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="code-block">
 <pre>
 <span class="comment">// Exemplos contrações obrigatórias</span>
 <span class="keyword">Je vais</span> <span class="function">au</span> cinéma.      <span class="string">(Vou ao cinema — à + le = au)</span>
 <span class="keyword">Le livre</span> <span class="function">du</span> professeur.  <span class="string">(O livro do professor — de + le = du)</span>
 <span class="keyword">Elle parle</span> <span class="function">aux</span> enfants. <span class="string">(Ela fala com as crianças — à + les = aux)</span>
 </pre>
-          </div>
-          <div class="warn-box">
-            <h4><i class="fas fa-exclamation-triangle"></i> Pegadinha clássica</h4>
-            <p>Palavras que começam com vogal usam <strong>l'</strong>: <strong>l'ami</strong> (o amigo), <strong>l'école</strong> (a escola) — tanto masculino quanto feminino!</p>
+            </div>
+            <div class="warn-box">
+              <h4><i class="fas fa-exclamation-triangle"></i> Pegadinha clássica</h4>
+              <p>Palavras que começam com vogal usam <strong>l'</strong>: <strong>l'ami</strong> (o amigo), <strong>l'école</strong> (a escola) — tanto masculino quanto feminino!</p>
+            </div>
           </div>
         </div>
 
-        <div class="content-card" id="verbos">
-          <h2><i class="fas fa-pen-nib"></i> Os Verbos: Être e Avoir</h2>
-          <p>Os verbos <strong>Être</strong> (Ser/Estar) e <strong>Avoir</strong> (Ter) são os dois mais importantes do idioma — são usados o tempo todo, inclusive como auxiliares.</p>
+        <div class="section-tab" id="sec-verbos">
+          <div class="content-card">
+            <h2><i class="fas fa-pen-nib"></i> Os Verbos: Être e Avoir</h2>
+            <p>Os verbos <strong>Être</strong> (Ser/Estar) e <strong>Avoir</strong> (Ter) são os dois mais importantes do idioma — são usados o tempo todo, inclusive como auxiliares.</p>
 
-          <div class="code-block">
+            <div class="code-block">
 <pre>
 <span class="comment">// ÊTRE (Ser/Estar) — Presente</span>
 <span class="keyword">Je</span>      <span class="function">suis</span>     <span class="string">(Eu sou / estou)</span>
@@ -582,78 +615,114 @@
 <span class="keyword">Vous</span>    <span class="function">avez</span>     <span class="string">(Vocês têm)</span>
 <span class="keyword">Ils/Elles</span> <span class="function">ont</span>    <span class="string">(Eles/Elas têm)</span>
 </pre>
-          </div>
-          <p>Lembre-se: em francês os pronomes (Je, Tu, Il...) são <strong>obrigatórios</strong> na frase, diferentemente do português onde podemos ocultá-los.</p>
-        </div>
-
-        <div class="content-card" id="regulares">
-          <h2><i class="fas fa-spell-check"></i> Verbos Regulares: -ER, -IR, -RE</h2>
-          <p>Existem três grupos de verbos. Os verbos em <strong>-ER</strong> (como <em>parler</em>) são os mais numerosos e seguem um padrão único:</p>
-          <table class="styled-table">
-            <thead><tr><th>Pessoa</th><th>Parler (-ER)</th><th>Finir (-IR)</th><th>AttendreRE)</th></tr></thead>
-            <tbody>
-              <tr><td>Je</td><td>parl<strong>e</strong></td><td>fin<strong>is</strong></td><td>attend<strong>s</strong></td></tr>
-              <tr><td>Tu</td><td>parl<strong>es</strong></td><td>fin<strong>is</strong></td><td>attend<strong>s</strong></td></tr>
-              <tr><td>Il/Elle</td><td>parl<strong>e</strong></td><td>fin<strong>it</strong></td><td>attend<strong></strong></td></tr>
-              <tr><td>Nous</td><td>parl<strong>ons</strong></td><td>fin<strong>issons</strong></td><td>attend<strong>ons</strong></td></tr>
-              <tr><td>Vous</td><td>parl<strong>ez</strong></td><td>fin<strong>issez</strong></td><td>attend<strong>ez</strong></td></tr>
-              <tr><td>Ils/Elles</td><td>parl<strong>ent</strong></td><td>fin<strong>issent</strong></td><td>attend<strong>ent</strong></td></tr>
-            </tbody>
-          </table>
-          <div class="info-box">
-            <h4><i class="fas fa-lightbulb"></i> Dica de ouro</h4>
-            <ul>
-              <li>Todos os verbos -ER (exceto <em>aller</em>) seguem o padrão de <strong>parler</strong>.</li>
-              <li>A 3ª pessoa do singular em -ER termina em "e" — <strong>o "e" final e o "ent" não são pronunciados!</strong></li>
-            </ul>
+            </div>
+            <p>Lembre-se: em francês os pronomes (Je, Tu, Il...) são <strong>obrigatórios</strong> na frase, diferentemente do português onde podemos ocultá-los.</p>
           </div>
         </div>
 
-        <div class="content-card" id="flashcards">
-          <h2><i class="fas fa-bolt"></i> Flashcards Interativos</h2>
-          <p>Clique no cartão para virar e ver a tradução. Teste sua memória!</p>
-          <div class="flashcard-area">
-            <div class="flashcard" id="flashcard">
-              <div class="flashcard-inner">
-                <div class="flashcard-face flashcard-front">
-                  <div class="word" id="fc-front">Bonjour</div>
-                  <div class="hint">Clique para revelar</div>
-                </div>
-                <div class="flashcard-face flashcard-back">
-                  <div class="word" id="fc-back">Bom dia / Boa tarde</div>
-                  <div class="hint">Clique para voltar</div>
+        <div class="section-tab" id="sec-regulares">
+          <div class="content-card">
+            <h2><i class="fas fa-spell-check"></i> Verbos Regulares: -ER, -IR, -RE</h2>
+            <p>Existem três grupos de verbos. Os verbos em <strong>-ER</strong> (como <em>parler</em>) são os mais numerosos e seguem um padrão único:</p>
+            <div class="table-container">
+              <table class="styled-table">
+                <thead><tr><th>Pessoa</th><th>Parler (-ER)</th><th>Finir (-IR)</th><th>Attendre (-RE)</th></tr></thead>
+                <tbody>
+                  <tr><td>Je</td><td>parl<strong>e</strong></td><td>fin<strong>is</strong></td><td>attend<strong>s</strong></td></tr>
+                  <tr><td>Tu</td><td>parl<strong>es</strong></td><td>fin<strong>is</strong></td><td>attend<strong>s</strong></td></tr>
+                  <tr><td>Il/Elle</td><td>parl<strong>e</strong></td><td>fin<strong>it</strong></td><td>attend</td></tr>
+                  <tr><td>Nous</td><td>parl<strong>ons</strong></td><td>fin<strong>issons</strong></td><td>attend<strong>ons</strong></td></tr>
+                  <tr><td>Vous</td><td>parl<strong>ez</strong></td><td>fin<strong>issez</strong></td><td>attend<strong>ez</strong></td></tr>
+                  <tr><td>Ils/Elles</td><td>parl<strong>ent</strong></td><td>fin<strong>issent</strong></td><td>attend<strong>ent</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="info-box">
+              <h4><i class="fas fa-lightbulb"></i> Dica de ouro</h4>
+              <ul>
+                <li>Todos os verbos -ER (exceto <em>aller</em>) seguem o padrão de <strong>parler</strong>.</li>
+                <li>A 3ª pessoa do singular em -ER termina em "e" — <strong>o "e" final e o "ent" não são pronunciados!</strong></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-tab" id="sec-flashcards">
+          <div class="content-card">
+            <h2><i class="fas fa-bolt"></i> Flashcards Interativos</h2>
+            <p>Clique no cartão para virar e ver a tradução. Teste sua memória!</p>
+            <div class="flashcard-area">
+              <div class="flashcard" id="flashcard">
+                <div class="flashcard-inner">
+                  <div class="flashcard-face flashcard-front">
+                    <div class="word" id="fc-front">Bonjour</div>
+                    <div class="hint">Clique para revelar</div>
+                  </div>
+                  <div class="flashcard-face flashcard-back">
+                    <div class="word" id="fc-back">Bom dia / Boa tarde</div>
+                    <div class="hint">Clique para voltar</div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="flashcard-controls">
-              <button class="btn btn-outline" id="fc-prev"><i class="fas fa-arrow-left"></i> Anterior</button>
-              <span id="fc-counter" style="align-self:center; color:var(--text-muted); font-size:0.85rem;">1 / 8</span>
-              <button class="btn" id="fc-next">Próximo <i class="fas fa-arrow-right"></i></button>
+              <div class="flashcard-controls">
+                <button class="btn btn-outline" id="fc-prev"><i class="fas fa-arrow-left"></i> Anterior</button>
+                <span id="fc-counter" style="color:var(--text-muted); font-size:0.85rem;">1 / 8</span>
+                <button class="btn" id="fc-next">Próximo <i class="fas fa-arrow-right"></i></button>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="content-card" id="quiz">
-          <h2><i class="fas fa-trophy"></i> Quiz Final — Teste seus Conhecimentos</h2>
-          <div class="quiz-question" id="quiz-question"></div>
-          <div class="quiz-options" id="quiz-options"></div>
-          <div class="quiz-feedback" id="quiz-feedback"></div>
-          <div class="quiz-score" id="quiz-score" style="display:none;"></div>
-          <div style="text-align:center; margin-top:1.25rem;">
-            <button class="btn" id="quiz-restart" style="display:none;"><i class="fas fa-redo"></i> Reiniciar Quiz</button>
+        <div class="section-tab" id="sec-quiz">
+          <div class="content-card">
+            <h2><i class="fas fa-trophy"></i> Quiz Final — Teste seus Conhecimentos</h2>
+            <div class="quiz-question" id="quiz-question"></div>
+            <div class="quiz-options" id="quiz-options"></div>
+            <div class="quiz-feedback" id="quiz-feedback"></div>
+            <div class="quiz-score" id="quiz-score" style="display:none;"></div>
+            <div style="text-align:center; margin-top:1.25rem;">
+              <button class="btn" id="quiz-restart" style="display:none;"><i class="fas fa-redo"></i> Reiniciar Quiz</button>
+            </div>
           </div>
         </div>
+
       </section>
     </div>
   </main>
+
   <footer>
     <div class="footer-divider"></div>
     <p>Criado para facilitar o estudo para a prova da Turma A e B.</p>
     <p>Desenvolvido com carinho por David Carlos Miranda Delgado.</p>
   </footer>
+
   <div id="toast"></div>
 
   <script>
+    const sectionsList = ['intro', 'saudacoes', 'numeros', 'cores', 'artigos', 'verbos', 'regulares', 'flashcards', 'quiz'];
+
+    function switchTab(sectionId) {
+      if (!sectionsList.includes(sectionId)) sectionId = 'intro';
+
+      document.querySelectorAll('.section-tab').forEach(tab => tab.classList.remove('active'));
+      const activeTab = document.getElementById('sec-' + sectionId);
+      if (activeTab) activeTab.classList.add('active');
+
+      document.querySelectorAll('.nav-link').forEach(link => {
+        if (link.getAttribute('href') === '#' + sectionId) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+
+      const idx = sectionsList.indexOf(sectionId);
+      const pct = ((idx + 1) / sectionsList.length) * 100;
+      document.getElementById('progress-bar').style.width = pct + '%';
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     function bindDropdowns(container) {
       container.querySelectorAll('.dropdown-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -682,35 +751,29 @@
     closeDrawerBtn.addEventListener('click', toggleDrawer);
     mobileOverlay.addEventListener('click', toggleDrawer);
 
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('.nav-link');
+      if (link && link.getAttribute('href')?.startsWith('#')) {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').substring(1);
+        switchTab(targetId);
+        if (mobileDrawer.classList.contains('open')) toggleDrawer();
+      }
+    });
+
     const toast = document.getElementById('toast');
     function showToast(msg) {
       toast.textContent = msg;
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 2500);
     }
-    document.getElementById('btn-tabela').addEventListener('click', e => {
-      e.preventDefault(); showToast('Tabela de verbos em breve!');
-    });
-    document.getElementById('btn-audio').addEventListener('click', e => {
-      e.preventDefault(); showToast('Áudios de pronúncia em breve!');
-    });
-
-    const progressBar = document.getElementById('progress-bar');
-    window.addEventListener('scroll', () => {
-      const h = document.documentElement;
-      progressBar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
-    });
-
-    const sections = document.querySelectorAll('.content-card[id], .hero[id]');
-    const navLinks = document.querySelectorAll('#sidebar .nav-link[href^="#"]');
-    window.addEventListener('scroll', () => {
-      let current = '';
-      sections.forEach(s => {
-        if (window.scrollY >= s.offsetTop - 120) current = s.id;
-      });
-      navLinks.forEach(l => {
-        l.classList.toggle('active', l.getAttribute('href') === '#' + current);
-      });
+    document.addEventListener('click', e => {
+      if (e.target.closest('#btn-tabela')) {
+        e.preventDefault(); showToast('Tabela de verbos em breve!');
+      }
+      if (e.target.closest('#btn-audio')) {
+        e.preventDefault(); showToast('Áudios de pronúncia em breve!');
+      }
     });
 
     const lessons = [
@@ -727,7 +790,8 @@
     const searchInput = document.getElementById('search-input');
     const searchResults = document.getElementById('search-results');
 
-    function renderResults(term)      searchResults.innerHTML = '';
+    function renderResults(term) {
+      searchResults.innerHTML = '';
       if (!term) { searchResults.classList.remove('show'); return; }
       const matches = lessons.filter(l =>
         l.title.toLowerCase().includes(term) || l.desc.toLowerCase().includes(term)
@@ -740,7 +804,7 @@
           div.className = 'search-result-item';
           div.innerHTML = '<h4>' + m.title + '</h4><p>' + m.desc + '</p>';
           div.addEventListener('click', () => {
-            document.getElementById(m.id).scrollIntoView({ behavior: 'smooth' });
+            switchTab(m.id);
             searchResults.classList.remove('show');
             searchInput.value = '';
             if (mobileDrawer.classList.contains('open')) toggleDrawer();
@@ -750,6 +814,7 @@
       }
       searchResults.classList.add('show');
     }
+
     searchInput.addEventListener('input', () => renderResults(searchInput.value.toLowerCase().trim()));
     document.addEventListener('click', e => {
       if (!e.target.closest('.search-wrapper')) searchResults.classList.remove('show');
@@ -794,9 +859,9 @@
       { q: 'O que significa "Merci beaucoup"?', opts: ['Por favor', 'Muito obrigado(a)', 'De nada', 'Com licença'], a: 1 },
       { q: 'Como se conjuga "être" na 1ª pessoa (Je)?', opts: ['J\'ai', 'Je suis', 'Je vais', 'Je fais'], a: 1 },
       { q: 'Como se diz o número 80 em francês?', opts: ['huitante', 'quatre-vingts', 'huit-dix', 'octante'], a: 1 },
-      { q: 'Qual a terminação correta: Nous (verbos -ER)?', opts: ['-ez', '-ent', '-ons', '-ons... "-ons"'], a: 2 },
+      { q: 'Qual a terminação correta para "Nous" nos verbos regulares em -ER?', opts: ['-ez', '-ent', '-ons', '-ais'], a: 2 },
       { q: '"Lundi" é qual dia da semana?', opts: ['Domingo', 'Terça', 'Segunda', 'Sábado'], a: 2 },
-      { q: 'Como se diz "a escola" (vogal inicial)?', opts: ['la école', "l'école", 'le école', 'les école'], a: 1 }
+      { q: 'Como se diz "a escola" (palavra iniciada por vogal)?', opts: ['la école', "l'école", 'le école', 'les école'], a: 1 }
     ];
     let qIndex = 0, qScore = 0, answered = false;
     const quizQuestion = document.getElementById('quiz-question');
@@ -811,7 +876,7 @@
       quizQuestion.textContent = 'Questão ' + (qIndex + 1) + '/' + quizData.length + ': ' + q.q;
       quizOptions.innerHTML = '';
       quizFeedback.textContent = '';
-      q.opts.forEach((, i) => {
+      q.opts.forEach((opt, i) => {
         const btn = document.createElement('button');
         btn.className = 'quiz-option';
         btn.textContent = opt;
@@ -840,7 +905,7 @@
         if (qIndex < quizData.length) {
           loadQuestion();
         } else {
-          const pct = Math.round(qScore / quizData.length * 100);
+          const pct = Math.round((qScore / quizData.length) * 100);
           quizQuestion.textContent = 'Quiz concluído!';
           quizOptions.innerHTML = '';
           quizFeedback.textContent = '';
@@ -879,6 +944,8 @@
       themeToggle.innerHTML = isLight ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
       showToast(isLight ? '☀️ Tema claro ativado' : '🌙 Tema escuro ativado');
     });
+
+    switchTab('intro');
   </script>
 
   <div vw class="enabled">
