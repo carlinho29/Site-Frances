@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aprenda Francês - Guia Essencial</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="description" content="Guia essencial para aprender francês: vocabulário, gramática, pronúncia e exercícios interativos.">
+  <title>Francês Essencial - Guia Completo de Aprendizagem</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -13,13 +14,15 @@
       --bg-card: #1a1a1a;
       --bg-card-hover: #222222;
       --bg-sidebar: #111111;
-      --bg-dropdown: #181818;
-      --text-primary: #f5f5f5;
+      --text-primary: #f5f55;
       --text-secondary: #a0a0a0;
       --text-muted: #666666;
       --accent: #00a651;
       --accent-hover: #00c45f;
       --accent-dim: rgba(0, 166, 81, 0.12);
+      --gold: #d4af37;
+      --blue: #4a9eff;
+      --red: #e05252;
       --border: #2a2a2a;
       --border-hover: #333333;
       --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
@@ -31,6 +34,8 @@
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    html { scroll-behavior: smooth; }
+
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background-color: var(--bg-primary);
@@ -39,31 +44,10 @@
       line-height: 1.6;
     }
 
-    .topbar {
+   brand-header {
       background: linear-gradient(180deg, #111111 0%, var(--bg-primary) 100%);
       border-bottom: 1px solid var(--border);
-      padding: 0.5rem 1rem;
-    }
-    .topbar-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 0.8rem;
-    }
-    .topbar a {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-    .topbar a:hover { color: var(--accent-hover); }
-
-    .brand-header {
-      background: linear-gradient(180deg, #111111 0%, var(--bg-primary) 100%);
-      border-bottom: 1px solid var(--border);
-      padding: 1.25rem 1rem;
+      padding: 1rem;
       position: sticky;
       top: 0;
       z-index: 100;
@@ -77,17 +61,12 @@
       justify-content: space-between;
       gap: 1rem;
     }
-    .header-title-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    .brand-header h1 {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-    .brand-header i { color: var(--accent); font-size: 1.6rem; }
+    .header-title-wrapper { display: flex; align-items: center; gap: 0.75rem; }
+    .brand-header h1 { font-size: 1.4rem; font-weight: 800; }
+    .brand-header h1 span { color: var(--accent); }
+    .brand-header > .header-container > .header-title-wrapper i { color: var(--accent); font-size: 1.6rem; }
+
+    .header-actions { display: flex; align-items: center; gap: 0.75rem; }
 
     .search-wrapper { position: relative; }
     .search-input {
@@ -107,146 +86,103 @@
       box-shadow: 0 0 0 3px var(--accent-dim);
     }
     .search-btn {
-      position: absolute;
-      right: 0.8rem;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 0.9rem;
+      position: absolute; right: 0.8rem; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: var(--text-muted); cursor: pointer;
     }
 
-    #hamburger-btn {
-      display: none;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      padding: 0.5rem 0.75rem;
-      border-radius: var(--radius-sm);
-      color: var(--text-primary);
-      cursor: pointer;
-      font-size: 1.1rem;
+    .icon-btn {
+      background: var(--bg-card); border: 1px solid var(--border);
+      padding: 0.55rem 0.75rem; border-radius: var(--radius-sm);
+      color: var(--text-primary); cursor: pointer; font-size: 1rem;
       transition: var(--transition);
     }
-    #hamburger-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    #hamburger-btn { display: none; }
+
+    #search-results {
+      display: none;
+      position: absolute; top: calc(100% + 8px); right: 0;
+      width: 320px; max-height: 350px; overflow-y: auto;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); box-shadow: var(--shadow); z-index: 200;
+    }
+    #search-results.show { display: block; }
+    .search-result-item {
+      padding: 0.75rem 1rem; cursor: pointer; border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+    .search-result-item:hover { background: var(--accent-dim); }
+    .search-result-item h4 { font-size: 0.9rem; color: var(--accent-hover); }
+    .search-result-item p { font-size: 0.8rem; color: var(--text-secondary); }
+
+    #progress-bar {
+      position: fixed; top: 0; left: 0; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      width: 0%; z-index: 500; transition: width 0.1s;
+    }
 
     #mobile-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 300;
-      backdrop-filter: blur(4px);
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7); z-index: 300; backdrop-filter: blur(4px);
     }
     #mobile-overlay.open { display: block; }
-
     #mobile-drawer {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 300px;
-      background: var(--bg-sidebar);
-      z-index: 400;
-      transform: translateX(-100%);
-      transition: transform 0.3s ease;
-      overflow-y: auto;
-      border-right: 1px solid var(--border);
-      box-shadow: 4px 0 20px rgba(0,0,0,0.5);
+      position: fixed; top: 0; left: 0; height: 100%; width: 300px;
+      background: var(--bg-sidebar); z-index: 400;
+      transform: translateX(-100%); transition: transform 0.3s ease;
+      overflow-y: auto; border-right: 1px solid var(--border);
     }
     #mobile-drawer.open { transform: translateX(0); }
     .drawer-header {
-      padding: 1.25rem;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      padding: 1.25rem; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
     }
-    .drawer-header h2 { font-size: 1.1rem; font-weight: 600; color: var(--text-primary); }
-    #close-drawer {
-      background: none;
-      border: none;
-      color: var(--text-secondary);
-      font-size: 1.5rem;
-      cursor: pointer;
-      transition: color 0.2s ease;
-    }
-    #close-drawer:hover { color: var(--accent); }
-    #mobile-nav-container { padding: 0.75rem; }
+    #close-drawer { background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; }
 
-    main { flex: 1; }
     .main-layout {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem 1.25rem;
-      display: flex;
-      gap: 2rem;
+      max-width: 1200px; margin: 0 auto; padding: 2rem 1.25rem;
+      display: flex; gap: 2rem;
     }
 
     #sidebar {
-      width: 280px;
-      flex-shrink: 0;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      height: fit-content;
-      position: sticky;
-      top: 100px;
-      box-shadow: var(--shadow-sm);
+      width: 280px; flex-shrink: 0;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+      height: fit-content; position: sticky; top: 90px;
     }
-    .sidebar-header {
-      padding: 1.25rem;
-      border-bottom: 1px solid var(--border);
-    }
+    .sidebar-header { padding: 1.25rem; border-bottom: 1px solid var(--border); }
     .sidebar-header h1 { font-size: 1.15rem; font-weight: 700; color: var(--accent); }
     #main-nav { padding: 0.75rem; }
 
-    .nav-section { margin-bottom: 0.5rem; }
     .nav-link, .dropdown-btn {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      padding: 0.7rem 0.9rem;
-      border-radius: var(--radius-sm);
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.9rem;
-      transition: var(--transition);
-      cursor: pointer;
-      position: relative;
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.7rem 0.9rem; border-radius: var(--radius-sm);
+      color: var(--text-secondary); text-decoration: none;
+      font-weight: 500; font-size: 0.9rem; transition: var(--transition);
+      cursor: pointer; position: relative; width: 100%; border: none; background: none;
+      font-family: inherit; text-align: left;
     }
     .nav-link:hover, .dropdown-btn:hover, .nav-link.active {
-      background: var(--accent-dim);
-      color: var(--accent-hover);
+      background: var(--accent-dim); color: var(--accent-hover);
     }
-    .nav-link i, .dropdown-btn i { width: 18px; text-align: center; }
     .dropdown-btn i:last-child {
-      position: absolute;
-      right: 0.75rem;
-      font-size: 0.7rem;
+      position: absolute; right: 0.75rem; font-size: 0.7rem;
       transition: transform 0.3s ease;
     }
     .dropdown-btn i.rotate-90 { transform: rotate(90deg); }
 
     .dropdown-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease-out;
-      padding-left: 0.5rem;
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.3s ease-out; padding-left: 0.5rem;
     }
     .dropdown-content.open { max-height: 1000px; }
-    .dropdown-content .nav-link { font-size: 0.85rem; padding: 0.55rem 0.9rem; margin-bottom: 0.15rem; }
 
-    .sidebar-resources { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+    .sidebar-resources { margin-top: 1.5rem; padding: 1rem 0.75rem 0.75rem; border-top: 1px solid var(--border); }
     .sidebar-resources h3 {
       font-size: 0.8rem; font-weight: 600; color: var(--text-muted);
       text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.75rem; padding: 0 0.9rem;
     }
-    .sidebar-resources ul { list-style: none; }
-    .sidebar-resources li { margin-bottom: 0.15rem; }
     .sidebar-resources a {
       display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.9rem;
       color: var(--text-muted); text-decoration: none; font-size: 0.82rem;
@@ -257,235 +193,477 @@
     #content { flex: 1; min-width: 0; }
 
     .content-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.75rem;
-      margin-bottom: 1.5rem;
-      box-shadow: var(--shadow-sm);
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.75rem;
+      margin-bottom: 1.5rem; box-shadow: var(--shadow-sm);
       transition: var(--transition);
+      scroll-margin-top: 90px;
     }
-    .content-card:hover { border-color: var(--border-hover); box-shadow: var(--shadow); }
+    .content-card:hover { border-color: var(--border-hover); }
     .content-card h2 {
-      font-size: 1.4rem; font-weight: 700; color: var(--text-primary);
-      margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem;
+      font-size: 1.4rem; font-weight: 700; margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 0.75rem;
     }
     .content-card h2 i { color: var(--accent); font-size: 1.3rem; }
     .content-card p { color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.95rem; }
-    .content-card p:last-child { margin-bottom: 0; }
     .content-card strong { color: var(--text-primary); }
-    
+
     .code-block {
       font-family: 'Fira Code', 'Courier New', monospace;
-      background: #0d0d0d;
-      color: #d4d4d4;
-      border-radius: var(--radius-sm);
-      padding: 1.25rem;
-      overflow-x: auto;
-      margin: 1rem 0;
-      border: 1px solid var(--border);
-      font-size: 0.88rem;
-      line-height: 1.7;
+      background: #0d0d0d; color: #d4d4d4;
+      border-radius: var(--radius-sm); padding: 1.25rem;
+      overflow-x: auto; margin: 1rem 0;
+      border: 1px solid var(--border); font-size: 0.88rem; line-height: 1.8;
     }
-    .code-block pre { margin: 0; white-space: pre-wrap; word-wrap: break-word; }
-    .keyword  { color: #569cd6; }
-    .string   { color: #ce9178; }
-    .comment  { color: #6a9955; font-style: italic; }
+    .code-block pre { margin: 0; white-space: pre-wrap; }
+    .keyword { color: #569cd6; }
+    .string { color: #ce9178; }
+    .comment { color: #6a9955; font-style: italic; }
     .function { color: #dcdcaa; }
-    .type     { color: #4ec9b0; }
 
     .info-box {
       background: var(--accent-dim); border-left: 3px solid var(--accent);
-      border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 1rem 1.25rem; margin-top: 1rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 1rem 1.25rem; margin-top: 1rem;
     }
     .info-box h4 { font-size: 0.85rem; font-weight: 600; color: var(--accent-hover); margin-bottom: 0.5rem; }
     .info-box ul { color: var(--text-secondary); font-size: 0.88rem; padding-left: 1.2rem; }
     .info-box li { margin-bottom: 0.25rem; }
     .info-box i { color: var(--accent); margin-right: 0.5rem; }
-    
+
+    .warn-box {
+      background: rgba(212, 175, 55, 0.1); border-left: 3px solid var(--gold);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 1rem 1.25rem; margin-top: 1rem;
+    }
+    .warn-box h4 { font-size: 0.85rem; color: var(--gold); margin-bottom: 0.5rem; }
+    .warn-box p { color: var(--text-secondary); font-size: 0.88rem; margin: 0; }
+
     .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem; }
     .grid-item {
       background: var(--bg-secondary); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 1rem; font-size: 0.9rem; color: var(--text-secondary);
+      border-radius: var(--radius-sm); padding: 1rem;
+      font-size: 0.9rem; color: var(--text-secondary); transition: var(--transition);
     }
+    .grid-item:hover { border-color: var(--accent); }
     .grid-item strong { color: var(--accent); }
+    .grid-item .phon { color: var(--blue); font-size: 0.8rem; display: block; margin-top: 0.25rem; }
+
+    .styled-table {
+      width: 100%; border-collapse: collapse; margin-top: 1rem;
+      font-size: 0.9rem; border-radius: var(--radius-sm); overflow: hidden;
+    }
+    .styled-table th {
+      background: var(--accent-dim); color: var(--accent-hover);
+      padding: 0.75rem; text-align: left; font-weight: 600;
+    }
+    .styled-table td {
+      padding: 0.7rem 0.75rem; border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    .styled-table tr:hover td { background: var(--bg-secondary); }
+    .styled-table td:first-child { color: var(--text-primary); font-weight: 500; }
+
+    .quiz-question { font-size: 1.05rem; font-weight: 600; margin-bottom: 1rem; }
+    .quiz-options { display: grid; gap: 0.6rem; }
+    .quiz-option {
+      background: var(--bg-secondary); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 0.8rem 1rem;
+      color: var(--text-secondary); cursor: pointer; text-align: left;
+      font-family: inherit; font-size: 0.92rem; transition: var(--transition);
+    }
+    .quiz-option:hover { border-color: var(--accent); color: var(--text-primary); }
+    .quiz-option.correct { border-color: var(--accent); background: var(--accent-dim); color: var(--accent-hover); }
+    .quiz-option.wrong { border-color: var(--red); background: rgba(224,82,82,0.12); color: var(--red); }
+    .quiz-feedback { margin-top: 1rem; font-size: 0.9rem; min-height: 1.4rem; }
+    .quiz-feedback.good { color: var(--accent); }
+    .quiz-feedback.bad { color: var(--red); }
+    .quiz-score { text-align: center; margin-top: 1.25rem; font-size: 1.1rem; font-weight: 700; color: var(--gold); }
+
+    .flashcard-area { display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-top: 1rem; }
+    .flashcard {
+      width: 100%; max-width: 420px; height: 180px;
+      perspective: 1000px; cursor: pointer;
+    }
+    .flashcard-inner {
+      width: 100%; height: 100%; position: relative;
+      transform-style: preserve-3d; transition: transform 0.6s;
+    }
+    .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+    .flashcard {
+      position: absolute; inset: 0; backface-visibility: hidden;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      border-radius: var(--radius); border: 1px solid var(--border);
+      padding: 1rem; text-align: center;
+    }
+    .flashcard-front { background: var(--bg-secondary); }
+    .flashcard-back { background: var(--accent-dim); transform: rotateY(180deg); }
+    .flashcard-face .word { font-size: 1.6rem; font-weight: 700; color: var(--text-primary); }
+    .flashcard-face .hint { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; }
+    .flashcard-controls { display: flex; gap: 0.75rem; }
+
+    .btn {
+      background: var(--accent); color: #fff; border: none;
+      padding: 0.65rem 1.4rem; border-radius: 100px;
+      font-family: inherit; font-weight: 600; font-size: 0.9rem;
+      cursor: pointer; transition: var(--transition);
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent; border: 1px solid var(--border); color: var(--text-secondary);
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); background: transparent; }
+
+    .hero {
+      text-align: center; padding: 2.5rem 1.5rem;
+      background: linear-gradient(135deg, var(--accent-dim), transparent 70%);
+      border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 1.5rem;
+    }
+    .hero h2 { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .hero h2 span { color: var(--accent); }
+    .hero p { color: var(--text-secondary); max-width: 600px; margin: 0 auto 1.25rem; }
+    .hero-stats { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
+    .hero-stat { text-align: center; }
+    .hero-stat b { font-size: 1.5rem; color: var(--accent); display: block; }
+    .hero-stat span { font-size: 0.8rem; color: var(--text-muted); }
 
     footer {
       background: var(--bg-secondary); border-top: 1px solid var(--border);
-      padding: 2.5rem 1.25rem; margin-top: 2rem; text-align: center; border-radius: var(--radius);
+      padding: 2.5rem 1.25rem; margin: 2rem 1.25rem; text-align: center;
+      border-radius: var(--radius);
     }
-    .footer-divider {
-      width: 60px; height: 2px; background: var(--accent); margin: 0 auto 1rem;
-      border-radius: 1px; opacity: 0.6;
-    }
+    .footer-divider { width: 60px; height: 2px; background: var(--accent); margin: 0 auto 1rem; border-radius: 1px; }
     footer p { color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 0.5rem; }
     footer .credits { font-weight: 600; color: var(--text-primary); }
+
+    #toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--bg-card); border: 1px solid var(--accent); color: var(--accent-hover);
+      padding: 0.75rem 1.5rem; border-radius: 100px; font-size: 0.9rem; font-weight: 500;
+      opacity: 0; transition: all 0.3s ease; z-index: 600; box-shadow: var(--shadow);
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     @media (max-width: 900px) {
       #sidebar { display: none; }
       #hamburger-btn { display: block; }
       .main-layout { padding: 1.25rem; gap: 0; }
-      .grid-2 { grid-template-columns: 1fr; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .search-input { width: 140px; }
+      #search-results { width: 260px; }
+    }
+    @media (max-width: 520px) {
+      .search-wrapper { display: none; }
     }
   </style>
 </head>
 <body>
 
+  <div id="progress-bar"></div>
+
   <header class="brand-header">
     <div class="header-container">
       <div class="header-title-wrapper">
         <i class="fas fa-language"></i>
-        <h1>Francês Essencial</h1>
-      </div>
-      
-      <div class="search-wrapper">
-        <input type="text" class="search-input" placeholder="Pesquisar">
-        <button class="search-btn"><i class="fas fa-search"></i></button>
+        <h1>Francês <span>Essencial</span></h1>
       </div>
 
-      <button id="hamburger-btn">
-        <i class="fas fa-bars"></i>
-      </button>
+      <div class="header-actions">
+        <div class="search-wrapper">
+          <input type="text" class="search-input" id="search-input" placeholder="Pesquisar lições..." autocomplete="off">
+          <button class="search-btn" id="search-btn"><i class="fas fa-search"></i></button>
+          <div id="search-results"></div>
+        </div>
+        <button class="icon-btn" id="theme-toggle" title="Alternar tema"><i class="fas fa-sun"></i></button>
+        <button class="icon-btn" id="hamburger-btn"><i class="fas fa-bars"></i></button>
+      </div>
     </div>
   </header>
 
   <div id="mobile-overlay"></div>
-  
+
   <div id="mobile-drawer">
     <div class="drawer-header">
       <h2>Menu de Lições</h2>
       <button id="close-drawer"><i class="fas fa-times"></i></button>
     </div>
-    <div id="mobile-nav-container">
-    </div>
+    <div id="mobile-nav-container"></div>
   </div>
 
   <main>
     <div class="main-layout">
-      
+
       <aside id="sidebar">
-        <div class="sidebar-header">
-          <h1>Tópicos</h1>
-        </div>
-        
+        <div class="sidebar-header"><h1><i class="fas fa-list"></i> Tópicos</h1></div>
         <nav id="main-nav">
           <div class="nav-section">
-            <a href="#" class="nav-link active">
-              <i class="fas fa-home"></i> Introdução
-            </a>
+            <a href="#intro" class="nav-link active"><i class="fas fa-home"></i> Introdução</a>
           </div>
-
           <div class="nav-section">
-            <div class="dropdown-btn">
-              <i class="fas fa-comment-dots"></i> Vocabulário
-              <i class="fas fa-chevron-right"></i>
-            </div>
+            <div class="dropdown-btn"><i class="fas fa-comment-dots"></i> Vocabulário <i class="fas fa-chevron-right"></i></div>
             <div class="dropdown-content">
-              <a href="#" class="nav-link">Saudações</a>
-              <a href="#" class="nav-link">Números</a>
-              <a href="#" class="nav-link">Cores e Dias</a>
+              <a href="#saudacoes" class="nav-link">Saudações</a>
+              <a href="#numeros" class="nav-link">Números</a>
+              <a href="#cores" class="nav-link">Cores e Dias</a>
             </div>
           </div>
-
           <div class="nav-section">
-            <div class="dropdown-btn">
-              <i class="fas fa-book-open"></i> Gramática
-              <i class="fas fa-chevron-right"></i>
-            </div>
+            <div class="dropdown-btn"><i class="fas fa-book-open"></i> Gramática <i class="fas fa-chevron-right"></i></div>
             <div class="dropdown-content">
-              <a href="#" class="nav-link">Os Artigos</a>
-              <a href="#" class="nav-link">Verbos Regulares</a>
-              <a href="#" class="nav-link">Verbos Irregulares</a>
+              <a href="#artigos" class="nav-link">Os Artigos</a>
+              <a href="#verbos" class="nav-link">Être &amp; Avoir</a>
+              <a href="#regulares" class="nav-link">Verbos Regulares</a>
             </div>
+          </div>
+          <div class="nav-section">
+            <a href="#flashcards" class="nav-link"><i class="fas fa-bolt"></i> Flashcards</a>
+          </div>
+          <div class="nav-section">
+            <a href="#quiz" class="nav-link"><i class="fas fa-trophy"></i> Quiz Final</a>
           </div>
 
           <div class="sidebar-resources">
             <h3>Materiais Extras</h3>
             <ul>
-              <li><a href="#"><i class="fas fa-file-pdf"></i> Tabela de Verbos</a></li>
-              <li><a href="#"><i class="fas fa-headphones"></i> Áudios de Pronúncia</a></li>
+              <li><a href="#" id="btn-tabela"><i class="fas fa-file-pdf"></i> Tabela de Verbos</a></li>
+              <li><a href="#" id="btn-audio"><i class="fas fa-headphones"></i> Áudios de Pronúncia</a></li>
             </ul>
           </div>
         </nav>
       </aside>
 
       <section id="content">
-        
+
+        <div class="hero" id="intro">
+          <h2>Apprenez le <span>Français</span> 🇫🇷</h2>
+          <p>Um guia completo e interativo para dominar os fundamentos da língua francesa — com vocabulário, gramática, flashcards e quiz.</p>
+          <div class="hero-stats">
+            <div class="hero-stat"><b>29+</b><span>Países francófonos</span></div>
+            <div class="hero-stat"><b>300M</b><span>Falantes no mundo</span></div>
+            <div class="hero-stat"><b>8</b><span>Lições completas</span></div>
+            <div class="hero-stat"><b>100%</b><span>Gratuito</span></div>
+          </div>
+        </div>
+
         <div class="content-card">
           <h2><i class="fas fa-map"></i> Bem-vindo ao Mundo do Francês</h2>
-          <p>Aprender francês pode abrir as portas para a cultura, história, gastronomia e negócios em mais de 29 países onde o idioma é falado. Neste guia rápido, vamos passar pelos pilares essenciais da língua francesa.</p>
-          
+          <p>Aprender francês abre portas para a cultura, história, gastronomia e negócios em mais de 29 países. Neste guia, vamos passar pelos pilares essenciais do idioma, do vocabulário básico até a conjugação verbal.</p>
           <div class="info-box">
             <h4><i class="fas fa-lightbulb"></i> Fato Curioso</h4>
             <ul>
-              <li>O francês é conhecido como a língua do amor, mas também é o idioma oficial de agências internacionais como a ONU, a UNESCO e a Cruz Vermelha.</li>
+              <li>O francês é idioma oficial da ONU, UNESCO e Cruz Vermelha.</li>
+              <li>Cerca de 30% do vocabulário inglês tem origem francesa.</li>
+              <li>É a 5ª língua mais falada do mundo e a 2ª mais aprendida como estrangeira.</li>
             </ul>
           </div>
         </div>
 
-        <div class="content-card">
+        <div class="content-card" id="saudacoes">
           <h2><i class="fas fa-comments"></i> Saudações Essenciais</h2>
-          <p>A primeira coisa que você precisa saber é como cumprimentar as pessoas. Os franceses valorizam muito a educação (a <strong>politesse</strong>).</p>
-          
+          <p>Os franceses valorizam muito a educação (a <strong>politesse</strong>). Sempre comece com uma saudação antes de qualquer pergunta!</p>
           <div class="grid-2">
-            <div class="grid-item">
-              <strong>Bonjour</strong><br>
-              Bom dia / Boa tarde. (Usado até o final da tarde)
-            </div>
-            <div class="grid-item">
-              <strong>Bonsoir</strong><br>
-              Boa noite. (Usado ao chegar a um lugar à noite)
-            </div>
-            <div class="grid-item">
-              <strong>S'il vous plaît</strong><br>
-              Por favor. (Formal ou no plural)
-            </div>
-            <div class="grid-item">
-              <strong>Merci beaucoup</strong><br>
-              Muito obrigado(a).
-            </div>
+            <div class="grid-item"><strong>Bonjour</strong><span class="phon">/bɔ̃ʒuʁ/ — "bon-zhúr"</span>Bom dia / Boa tarde (até o fim da tarde).</div>
+            <div class="grid-item"><strong>Bonsoir</strong><span class="phon">/bɔ̃swaʁ/ — "bon-suár"</span>Boa noite (ao chegar).</div>
+            <div class="grid-item"><strong>Bonne nuit</strong><span class="phon">/bɔn nɥi/ — "bon-nuí"</span>Boa noite (ao dormir).</div>
+            <div class="grid-item"><strong>S'il vous plaît</strong><span class="phon">/sil vu plɛ/ — "sil-vu-plé"</span>Por favor (formal).</div>
+            <div class="grid-item"><strong>Merci beaucoup</strong><span class="phon">/mɛʁsi boku/ — "mer-sí bo-cú"</span>Muito obrigado(a).</div>
+            <div class="grid-item"><strong>Au revoir</strong><span class="phon">/o ʁəvwaʁ/ — "o-re-vuár"</span>Até logo / Adeus.</div>
+            <div class="grid-item"><strong>Comment ça va ?</strong><span class="phon">— "comã sa vá"</span>Como vai você?</div>
+            <div class="grid-item"><strong>Enchanté(e)</strong><span class="phon">— "an-chã-té"</span>Prazer em conhecê-lo(a).</div>
+          </div>
+          <div class="warn-box">
+            <h4><i class="fas fa-exclamation-triangle"></i> Atenção à pronúncia</h4>
+            <p>O "R" francês é gutural (vem da garganta), diferente do "R" português. Pratique com a palavra <strong>Paris</strong> — soa mais como "pa-RHI".</p>
           </div>
         </div>
 
-        <div class="content-card">
+        <div class="content-card" id="numeros">
+          <h2><i class="fas fa-sort-numeric-up"></i> Números de 0 a 20</h2>
+          <p>Os números são fundamentais para compras, horários e telefones. Note que a partir de 70 o sistema francês fica curioso!</p>
+          <table class="styled-table">
+            <thead><tr><th>Número</th><th>Francês</th><th>Pronúncia</th></tr></thead>
+            <tbody>
+              <tr><td>0</td><td>zéro</td><td>ze-rô</td></tr>
+              <tr><td>1</td><td>un</td><td>ã</td></tr>
+              <tr><td>2</td><td>deux</td><td>deu</td></tr>
+              <tr><td>3</td><td>trois</td><td>truá</td></tr>
+              <tr><td>4</td><td>quatre</td><td>katr</td></tr>
+              <tr><td>5</td><td>cinq</td><td>sãk</td></tr>
+              <tr><td>6</td><td>six</td><td>siss</td></tr>
+              <tr><td>7</td><td>sept</td><td>sét</td></tr>
+              <tr><td>8</td><td>huit</td><td>üit</td></tr>
+              <tr><td>9</td><td>neuf</td><td>neuf</td></tr>
+              <tr><td>10</td><td>dix</td><td>diss</td></tr>
+              <tr><td>11–16</td><td>onze, douze, treize, quatorze, quinze, seize</td><td>ônz, duz, trez, ka-torz, kãz, sez</td></tr>
+              <tr><td>17</td><td>dix-sept</td><td>di-sét (10+7)</td></tr>
+              <tr><td>20</td><td>vingt</td><td>vã</td></tr>
+            </tbody>
+          </table>
+          <div class="info-box">
+            <h4><i class="fas fa-lightbulb"></i> Curiosidade matemática</h4>
+            <ul>
+              <li><strong>70</strong> = soixante-dix (60 + 10) &nbsp;•&nbsp; <strong>80</strong> = quatre-vingts (4 × 20) &nbsp;•&nbsp; <strong>90</strong> = quatre-vingt-dix (4 × 20 + 10)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="content-card" id="cores">
+          <h2><i class="fas fa-palette"></i> Cores e Dias da Semana</h2>
+          <div class="grid-3">
+            <div class="grid-item"><strong>Rouge</strong> — Vermelho</div>
+            <div class="grid-item"><strong>Bleu</strong> — Azul</div>
+            <div class="grid-item"><strong>Vert</strong> — Verde</div>
+            <div class="grid-item"><strong>Jaune</strong> — Amarelo</div>
+            <div class="grid-item"><strong>Noir</strong> — Preto</div>
+            <div class="grid-item"><strong>Blanc</strong> — Branco</div>
+          </div>
+          <table class="styled-table" style="margin-top:1.5rem;">
+            <thead><tr><th>Dia</th><th>Francês</th><th>Dia</th><th>Francês</th></tr></thead>
+            <tbody>
+              <tr><td>Segunda</td><td>lundi</td><td>Quinta</td><td>jeudi</td></tr>
+              <tr><td>Terça</td><td>mardi</td><td>Sexta</td><td>vendredi</td></tr>
+              <tr<td>Quarta</td><td>mercredi</td><td>Sábado</td><td>samedi</td></tr>
+              <tr><td colspan="2"></td><td>Domingo</td><td>dimanche</td></tr>
+            </tbody>
+          </table>
+          <div class="info-box">
+            <h4><i class="fas fa-lightbulb"></i> Dica</h4>
+            <ul><li>Os dias da semana não levam maiúscula em francês: <strong>lundi</strong>, não <strong>Lundi</strong>.</li></ul>
+          </div>
+        </div>
+
+        <div class="content-card" id="artigos">
+          <h2><i class="fas fa-book"></i> Os Artigos</h2>
+          <p>Diferente do português, o francês tem artigos <strong>contractions</strong> obrigatórias com preposições:</p>
+          <table class="styled-table">
+            <thead><tr><th>Tipo</th><th>Masculino</th><th>Feminino</th><th>Plural</th></tr></thead>
+            <tbody>
+              <tr><td>Definido (o/a/os/as)</td><td>le</td><td>la</td><td>les</td></tr>
+              <tr><td>Indefinido (um/uma)</td><td>un</td><td>une</td><td>des</td></tr>
+              <tr><td>Com "de" (do/da)</td><td>du (de+le)</td><td>de la</td><td>des</td></tr>
+                            <tr><td>Com "à" (ao/à)</td><td>au (à+le)</td><td>à la</td><td>aux</td></tr>
+            </tbody>
+          </table>
+          <div class="code-block">
+<pre>
+<span class="comment">// Exemplos contrações obrigatórias</span>
+<span class="keyword">Je vais</span> <span class="function">au</span> cinéma.      <span class="string">(Vou ao cinema — à + le = au)</span>
+<span class="keyword">Le livre</span> <span class="function">du</span> professeur.  <span class="string">(O livro do professor — de + le = du)</span>
+<span class="keyword">Elle parle</span> <span class="function">aux</span> enfants. <span class="string">(Ela fala com as crianças — à + les = aux)</span>
+</pre>
+          </div>
+          <div class="warn-box">
+            <h4><i class="fas fa-exclamation-triangle"></i> Pegadinha clássica</h4>
+            <p>Palavras que começam com vogal usam <strong>l'</strong>: <strong>l'ami</strong> (o amigo), <strong>l'école</strong> (a escola) — tanto masculino quanto feminino!</p>
+          </div>
+        </div>
+
+        <div class="content-card" id="verbos">
           <h2><i class="fas fa-pen-nib"></i> Os Verbos: Être e Avoir</h2>
-          <p>Os verbos <strong>Être</strong> (Ser/Estar) e <strong>Avoir</strong> (Ter) são os dois verbos mais importantes do idioma. Eles são usados o tempo todo, inclusive como verbos auxiliares.</p>
+          <p>Os verbos <strong>Être</strong> (Ser/Estar) e <strong>Avoir</strong> (Ter) são os dois mais importantes do idioma — são usados o tempo todo, inclusive como auxiliares.</p>
 
           <div class="code-block">
 <pre>
-<span class="comment">// Conjugação do verbo Être (Ser/Estar) no Presente</span>
-<span class="keyword">Je</span> <span class="function">suis</span>      <span class="string">(Eu sou / estou)</span>
-<span class="keyword">Tu</span> <span class="function">es</span>        <span class="string">(Tu és / estás)</span>
-<span class="keyword">Il/Elle</span> <span class="function">est</span>  <span class="string">(Ele/Ela é / está)</span>
-<span class="keyword">Nous</span> <span class="function">sommes</span>  <span class="string">(Nós somos / estamos)</span>
-<span class="keyword">Vous</span> <span class="function">êtes</span>    <span class="string">(Vocês são / o senhor é)</span>
-<span class="keyword">Ils/Elles</span> <span class="function">sont</span> <span class="string">(Eles/Elas são / estão)</span>
+<span class="comment">// ÊTRE (Ser/Estar) — Presente</span>
+<span class="keyword">Je</span>      <span class="function">suis</span>     <span class="string">(Eu sou / estou)</span>
+<span class="keyword">Tu</span>      <span class="function">es</span>       <span class="string">(Tu és / estás)</span>
+<span class="keyword">Il/Elle</span> <span class="function">est</span>      <span class="string">(Ele/Ela é / está)</span>
+<span class="keyword">Nous</span>    <span class="function">sommes</span>   <span class="string">(Nós somos / estamos)</span>
+<span class="keyword">Vous</span>    <span class="function">êtes</span>     <span class="string">(Vocês são / o senhor é)</span>
+<span class="keyword">Ils/Elles</span> <span class="function">sont</span>   <span class="string">(Eles/Elas são / estão)</span>
+
+<span class="comment">// AVOIR (Ter) — Presente</span>
+<span class="keyword">J'</span>      <span class="function">ai</span>       <span class="string">(Eu tenho)</span>
+<span class="keyword">Tu</span>      <span class="function">as</span>       <span class="string">(Tu tens)</span>
+<span class="keyword">Il/Elle</span> <span class="function">a</span>        <span class="string">(Ele/Ela tem)</span>
+<span class="keyword">Nous</span>    <span class="function">avons</span>    <span class="string">(Nós temos)</span>
+<span class="keyword">Vous</span>    <span class="function">avez</span>     <span class="string">(Vocês têm)</span>
+<span class="keyword">Ils/Elles</span> <span class="function">ont</span>    <span class="string">(Eles/Elas têm)</span>
 </pre>
           </div>
-          <p>Lembre-se: Em francês, os pronomes (Je, Tu, Il...) são obrigatórios na frase, diferentemente do português onde podemos ocultá-los.</p>
+          <p>Lembre-se: em francês os pronomes (Je, Tu, Il...) são <strong>obrigatórios</strong> na frase, diferentemente do português onde podemos ocultá-los.</p>
         </div>
 
+        <div class="content-card" id="regulares">
+          <h2><i class="fas fa-spell-check"></i> Verbos Regulares: -ER, -IR, -RE</h2>
+          <p>Existem três grupos de verbos. Os verbos em <strong>-ER</strong> (como <em>parler</em>) são os mais numerosos e seguem um padrão único:</p>
+          <table class="styled-table">
+            <thead><tr><th>Pessoa</th><th>Parler (-ER)</th><th>Finir (-IR)</th><th>AttendreRE)</th></tr></thead>
+            <tbody>
+              <tr><td>Je</td><td>parl<strong>e</strong></td><td>fin<strong>is</strong></td><td>attend<strong>s</strong></td></tr>
+              <tr><td>Tu</td><td>parl<strong>es</strong></td><td>fin<strong>is</strong></td><td>attend<strong>s</strong></td></tr>
+              <tr><td>Il/Elle</td><td>parl<strong>e</strong></td><td>fin<strong>it</strong></td><td>attend<strong></strong></td></tr>
+              <tr><td>Nous</td><td>parl<strong>ons</strong></td><td>fin<strong>issons</strong></td><td>attend<strong>ons</strong></td></tr>
+              <tr><td>Vous</td><td>parl<strong>ez</strong></td><td>fin<strong>issez</strong></td><td>attend<strong>ez</strong></td></tr>
+              <tr><td>Ils/Elles</td><td>parl<strong>ent</strong></td><td>fin<strong>issent</strong></td><td>attend<strong>ent</strong></td></tr>
+            </tbody>
+          </table>
+          <div class="info-box">
+            <h4><i class="fas fa-lightbulb"></i> Dica de ouro</h4>
+            <ul>
+              <li>Todos os verbos -ER (exceto <em>aller</em>) seguem o padrão de <strong>parler</strong>.</li>
+              <li>A 3ª pessoa do singular em -ER termina em "e" — <strong>o "e" final e o "ent" não são pronunciados!</strong></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="content-card" id="flashcards">
+          <h2><i class="fas fa-bolt"></i> Flashcards Interativos</h2>
+          <p>Clique no cartão para virar e ver a tradução. Teste sua memória!</p>
+          <div class="flashcard-area">
+            <div class="flashcard" id="flashcard">
+              <div class="flashcard-inner">
+                <div class="flashcard-face flashcard-front">
+                  <div class="word" id="fc-front">Bonjour</div>
+                  <div class="hint">Clique para revelar</div>
+                </div>
+                <div class="flashcard-face flashcard-back">
+                  <div class="word" id="fc-back">Bom dia / Boa tarde</div>
+                  <div class="hint">Clique para voltar</div>
+                </div>
+              </div>
+            </div>
+            <div class="flashcard-controls">
+              <button class="btn btn-outline" id="fc-prev"><i class="fas fa-arrow-left"></i> Anterior</button>
+              <span id="fc-counter" style="align-self:center; color:var(--text-muted); font-size:0.85rem;">1 / 8</span>
+              <button class="btn" id="fc-next">Próximo <i class="fas fa-arrow-right"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-card" id="quiz">
+          <h2><i class="fas fa-trophy"></i> Quiz Final — Teste seus Conhecimentos</h2>
+          <div class="quiz-question" id="quiz-question"></div>
+          <div class="quiz-options" id="quiz-options"></div>
+          <div class="quiz-feedback" id="quiz-feedback"></div>
+          <div class="quiz-score" id="quiz-score" style="display:none;"></div>
+          <div style="text-align:center; margin-top:1.25rem;">
+            <button class="btn" id="quiz-restart" style="display:none;"><i class="fas fa-redo"></i> Reiniciar Quiz</button>
+          </div>
+        </div>
       </section>
     </div>
   </main>
-
   <footer>
     <div class="footer-divider"></div>
     <p>Criado para facilitar o estudo para a prova da Turma A e B.</p>
     <p>Desenvolvido com carinho por David Carlos Miranda Delgado.</p>
-    <p>Versão 1.0</p>
   </footer>
+  <div id="toast"></div>
+
   <script>
-    const dropdownBtns = document.querySelectorAll('.dropdown-btn');
-    dropdownBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const content = btn.nextElementSibling;
-        const icon = btn.querySelector('.fa-chevron-right');
-        
-        content.classList.toggle('open');
-        icon.classList.toggle('rotate-90');
+    function bindDropdowns(container) {
+      container.querySelectorAll('.dropdown-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          btn.nextElementSibling.classList.toggle('open');
+          btn.querySelector('.fa-chevron-right').classList.toggle('rotate-90');
+        });
       });
-    });
+    }
+    bindDropdowns(document);
+
     const hamburgerBtn = document.getElementById('hamburger-btn');
     const mobileDrawer = document.getElementById('mobile-drawer');
     const mobileOverlay = document.getElementById('mobile-overlay');
@@ -494,16 +672,8 @@
     const mainNav = document.getElementById('main-nav');
 
     mobileNavContainer.appendChild(mainNav.cloneNode(true));
+    bindDropdowns(mobileNavContainer);
 
-    const mobileDropdownBtns = mobileNavContainer.querySelectorAll('.dropdown-btn');
-    mobileDropdownBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const content = btn.nextElementSibling;
-        const icon = btn.querySelector('.fa-chevron-right');
-        content.classList.toggle('open');
-        icon.classList.toggle('rotate-90');
-      });
-    });
     function toggleDrawer() {
       mobileDrawer.classList.toggle('open');
       mobileOverlay.classList.toggle('open');
@@ -511,16 +681,215 @@
     hamburgerBtn.addEventListener('click', toggleDrawer);
     closeDrawerBtn.addEventListener('click', toggleDrawer);
     mobileOverlay.addEventListener('click', toggleDrawer);
+
+    const toast = document.getElementById('toast');
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+    document.getElementById('btn-tabela').addEventListener('click', e => {
+      e.preventDefault(); showToast('Tabela de verbos em breve!');
+    });
+    document.getElementById('btn-audio').addEventListener('click', e => {
+      e.preventDefault(); showToast('Áudios de pronúncia em breve!');
+    });
+
+    const progressBar = document.getElementById('progress-bar');
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement;
+      progressBar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
+    });
+
+    const sections = document.querySelectorAll('.content-card[id], .hero[id]');
+    const navLinks = document.querySelectorAll('#sidebar .nav-link[href^="#"]');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 120) current = s.id;
+      });
+      navLinks.forEach(l => {
+        l.classList.toggle('active', l.getAttribute('href') === '#' + current);
+      });
+    });
+
+    const lessons = [
+      { id: 'intro', title: 'Introdução', desc: 'Bem-vindo ao mundo do francês' },
+      { id: 'saudacoes', title: 'Saudações', desc: 'Bonjour, Bonsoir, Merci...' },
+      { id: 'numeros', title: 'Números', desc: 'De zéro a vingt e além' },
+      { id: 'cores', title: 'Cores e Dias', desc: 'Rouge, bleu, lundi, mardi...' },
+      { id: 'artigos', title: 'Os Artigos', desc: 'le, la, les, un, une, des' },
+      { id: 'verbos', title: 'Être & Avoir', desc: 'Os dois verbos essenciais' },
+      { id: 'regulares', title: 'Verbos Regulares', desc: 'Grupos -ER, -IR, -RE' },
+      { id: 'flashcards', title: 'Flashcards', desc: 'Pratique com cartões' },
+      { id: 'quiz', title: 'Quiz Final', desc: 'Teste seus conhecimentos' }
+    ];
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+
+    function renderResults(term)      searchResults.innerHTML = '';
+      if (!term) { searchResults.classList.remove('show'); return; }
+      const matches = lessons.filter(l =>
+        l.title.toLowerCase().includes(term) || l.desc.toLowerCase().includes(term)
+      );
+      if (!matches.length) {
+        searchResults.innerHTML = '<div class="search-result-item"><p>Nenhum resultado encontrado.</p></div>';
+      } else {
+        matches.forEach(m => {
+          const div = document.createElement('div');
+          div.className = 'search-result-item';
+          div.innerHTML = '<h4>' + m.title + '</h4><p>' + m.desc + '</p>';
+          div.addEventListener('click', () => {
+            document.getElementById(m.id).scrollIntoView({ behavior: 'smooth' });
+            searchResults.classList.remove('show');
+            searchInput.value = '';
+            if (mobileDrawer.classList.contains('open')) toggleDrawer();
+          });
+          searchResults.appendChild(div);
+        });
+      }
+      searchResults.classList.add('show');
+    }
+    searchInput.addEventListener('input', () => renderResults(searchInput.value.toLowerCase().trim()));
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.search-wrapper')) searchResults.classList.remove('show');
+    });
+    document.getElementById('search-btn').addEventListener('click', () => renderResults(searchInput.value.toLowerCase().trim()));
+
+    const cards = [
+      { f: 'Bonjour', b: 'Bom dia / Boa tarde' },
+      { f: 'Merci beaucoup', b: 'Muito obrigado(a)' },
+      { f: 'Au revoir', b: 'Até logo / Adeus' },
+      { f: 'Comment ça va ?', b: 'Como vai você?' },
+      { f: 'Je suis brésilien(ne)', b: 'Eu sou brasileiro(a)' },
+      { f: "J'ai vingt ans", b: 'Eu tenho vinte anos' },
+      { f: "S'il vous plaît", b: 'Por favor (formal)' },
+      { f: "Enchanté(e)", b: 'Prazer em conhecê-lo(a)' }
+    ];
+    let fcIndex = 0;
+    const flashcard = document.getElementById('flashcard');
+    const fcFront = document.getElementById('fc-front');
+    const fcBack = document.getElementById('fc-back');
+    const fcCounter = document.getElementById('fc-counter');
+
+    function updateCard() {
+      flashcard.classList.remove('flipped');
+      setTimeout(() => {
+        fcFront.textContent = cards[fcIndex].f;
+        fcBack.textContent = cards[fcIndex].b;
+        fcCounter.textContent = (fcIndex + 1) + ' / ' + cards.length;
+      }, 200);
+    }
+    flashcard.addEventListener('click', () => flashcard.classList.toggle('flipped'));
+    document.getElementById('fc-next').addEventListener('click', () => {
+      fcIndex = (fcIndex + 1) % cards.length; updateCard();
+    });
+    document.getElementById('fc-prev').addEventListener('click', () => {
+      fcIndex = (fcIndex - 1 + cards.length) % cards.length; updateCard();
+    });
+
+    const quizData = [
+      { q: 'Como se diz "Bom dia" em francês?', opts: ['Bonjour', 'Bonsoir', 'Bonne nuit', 'Au revoir'], a: 0 },
+      { q: 'Qual a contração correta de "à + le"?', opts: ['à le', 'du', 'au', 'des'], a: 2 },
+      { q: 'O que significa "Merci beaucoup"?', opts: ['Por favor', 'Muito obrigado(a)', 'De nada', 'Com licença'], a: 1 },
+      { q: 'Como se conjuga "être" na 1ª pessoa (Je)?', opts: ['J\'ai', 'Je suis', 'Je vais', 'Je fais'], a: 1 },
+      { q: 'Como se diz o número 80 em francês?', opts: ['huitante', 'quatre-vingts', 'huit-dix', 'octante'], a: 1 },
+      { q: 'Qual a terminação correta: Nous (verbos -ER)?', opts: ['-ez', '-ent', '-ons', '-ons... "-ons"'], a: 2 },
+      { q: '"Lundi" é qual dia da semana?', opts: ['Domingo', 'Terça', 'Segunda', 'Sábado'], a: 2 },
+      { q: 'Como se diz "a escola" (vogal inicial)?', opts: ['la école', "l'école", 'le école', 'les école'], a: 1 }
+    ];
+    let qIndex = 0, qScore = 0, answered = false;
+    const quizQuestion = document.getElementById('quiz-question');
+    const quizOptions = document.getElementById('quiz-options');
+    const quizFeedback = document.getElementById('quiz-feedback');
+    const quizScore = document.getElementById('quiz-score');
+    const quizRestart = document.getElementById('quiz-restart');
+
+    function loadQuestion() {
+      answered = false;
+      const q = quizData[qIndex];
+      quizQuestion.textContent = 'Questão ' + (qIndex + 1) + '/' + quizData.length + ': ' + q.q;
+      quizOptions.innerHTML = '';
+      quizFeedback.textContent = '';
+      q.opts.forEach((, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-option';
+        btn.textContent = opt;
+        btn.addEventListener('click', () => answer(i, btn));
+        quizOptions.appendChild(btn);
+      });
+    }
+
+    function answer(i, btn) {
+      if (answered) return;
+      answered = true;
+      const q = quizData[qIndex];
+      const opts = quizOptions.querySelectorAll('.quiz-option');
+      opts[q.a].classList.add('correct');
+      if (i === q.a) {
+        qScore++;
+        quizFeedback.textContent = '✅ Correto! Parabéns!';
+        quizFeedback.className = 'quiz-feedback good';
+      } else {
+        btn.classList.add('wrong');
+        quizFeedback.textContent = '❌ Incorreto. A resposta certa está destacada.';
+        quizFeedback.className = 'quiz-feedback bad';
+      }
+      setTimeout(() => {
+        qIndex++;
+        if (qIndex < quizData.length) {
+          loadQuestion();
+        } else {
+          const pct = Math.round(qScore / quizData.length * 100);
+          quizQuestion.textContent = 'Quiz concluído!';
+          quizOptions.innerHTML = '';
+          quizFeedback.textContent = '';
+          quizScore.style.display = 'block';
+          quizScore.textContent = 'Sua pontuação: ' + qScore + '/' + quizData.length + ' (' + pct + '%)' +
+            (pct === 100 ? ' — Très bien! Perfeito! 🏆' : pct >= 70 ? ' — Bien joué! Muito bom! 👏' : ' — Continue praticando! 💪');
+          quizRestart.style.display = 'inline-flex';
+        }
+      }, 1400);
+    }
+
+    quizRestart.addEventListener('click', () => {
+      qIndex = 0; qScore = 0;
+      quizScore.style.display = 'none';
+      quizRestart.style.display = 'none';
+      loadQuestion();
+    });
+    loadQuestion();
+
+    const themeToggle = document.getElementById('theme-toggle');
+    const lightTheme = document.createElement('style');
+    lightTheme.textContent = `
+      body.light {
+        --bg-primary: #f5f6f7; --bg-secondary: #ececec; --bg-card: #ffffff;
+        --bg-sidebar: #ffffff; --text-primary: #1a1a1a; --text-secondary: #555555;
+        --text-muted: #999999; --border: #dddddd; --border-hover: #bbbbbb;
+        --shadow: 0 8px 32px rgba(0,0,0,0.1); --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+      }
+      body.light .code-block { background: #f0f0f0; color: #333; }
+    `;
+    document.head.appendChild(lightTheme);
+
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+      const isLight = document.body.classList.contains('light');
+      themeToggle.innerHTML = isLight ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+      showToast(isLight ? '☀️ Tema claro ativado' : '🌙 Tema escuro ativado');
+    });
   </script>
+
   <div vw class="enabled">
-  <div vw-access-button class="active"></div>
-  <div vw-plugin-wrapper>
-    <div class="vw-plugin-top-wrapper"></div>
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
+    </div>
   </div>
-</div>
-<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-<script>
-  new window.VLibras.Widget('https://vlibras.gov.br/app');
-</script>
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+  </script>
 </body>
 </html>
